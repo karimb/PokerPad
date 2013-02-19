@@ -1,0 +1,44 @@
+PokerPad for Party Poker and iPoker
+-----------------------------------
+
+BL-0.2 (23th December 2012)
+- Making it work with Party poker/Modern. It seems the Party Poker code was no longer up to date for the last two Party Poker updates at least.
+
+(Donkey111 - Party Poker Modern)
+0.5 (27th April 2011):
+- Update due last party update
+
+0.4 (20th March 2011):
+- Disable fixed betting when fixed bet is smaller than first one
+
+0.3:
+- Fix the 0.0 pot amount
+
+0.2:
+- Remove forgotten debug code
+- If fixed bet is equal to 0, ignore the hotkey
+
+0.1: Initial release
+
+(xor - iPoker)
+Version 0.1.26
+
+- fixed basic betting functions for the new ipoker software.
+Note 1:  we no longer read the screen for potsize but calculate it from the
+  dealer messages. They must be set to verbose in the ipoker software.
+Note 2: Tables must be at the default size, else you'll get misclicks.
+
+
+Version 0.1.25
+
+Changes relative to the last Pokerpad release (0.1.24):
+
+- update the Absolute part to work for the Cereus network;
+  enable the hotkeys for absolute and relative pot bets
+
+- update the Ipoker part for the absolute /relative bets to work
+  again, including the new Euro and GBP tables.
+NOTE: the potbets only work when verbose dealer messages are on
+
+- make the clear / focus betbox code work for Pokerstars, as I hate
+  having to use the mouse to do this
