@@ -95,7 +95,7 @@ Display_GetContext(ByRef device, ByRef context, ByRef pixels, ByRef id) {
 }
 
 
-Display_CompareColors(ByRef bgr1, ByRef bgr2, ByRef variation = 0) {
+Display_CompareColors(ByRef bgr1, ByRef bgr2, variation = 0) {
 	c1 := bgr1 & 0xff
 	c2 := bgr2 & 0xff
 	if (abs(c1 - c2) > variation)

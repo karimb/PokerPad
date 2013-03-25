@@ -1,6 +1,15 @@
 PokerPad for Party Poker and iPoker
 -----------------------------------
 
+v0.1.28 (25-03-2013)
+- iPoker: PokerPad now displays a message if the chat window is not maximised
+- iPoker: Pot Limit tables now supported
+- iPoker: Increase/Decrease bet buttons (defaulted to the mousewheel) now click in the slider area before increasing/decreasing
+- iPoker: fix a rare bug where the pot button sometimes goes all-in
+
+v0.1.27 (19-02-2013)
+BL-0.2 becomes officially PokerPad v0.1.27
+
 BL-0.2 (23th December 2012)
 - Making it work with Party poker/Modern. It seems the Party Poker code was no longer up to date for the last two Party Poker updates at least.
 

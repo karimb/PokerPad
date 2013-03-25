@@ -1663,7 +1663,7 @@ IPoker() {
 	IPoker_Pot = 378 80 60 22
 	IPoker_BetBox = 715 512 40 6
 	
-	IPoker_PotButton = 640 483 60 7
+	IPoker_PotButton = 660 483 30 7
 	
 	IPoker_ChatBox := CreateArea("16,534,360,60", 780, 557)
 	
@@ -1689,6 +1689,10 @@ IPoker_AdjustSize(box) {
 	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
 }
 ;%
+
+/* AdjustClick clicks to the area of the screen indicated by x and y
+   with mouse button c (c=0 moves without click) 
+*/
 IPoker_AdjustClick(x, y, c = 1) {
 	local px,py,w, h
 	WinGetPos, , , w, h
@@ -1702,6 +1706,25 @@ IPoker_AdjustClick(x, y, c = 1) {
 	Click %px% %py% 0
 }
 
+/* Return true if the chat window is maximized 
+*/
+IPoker_ChatMaximized() {
+	local w,h,x,y,dx,bgr,bgr2
+	;x := 265
+	x := 380
+	y := 509
+	dy := 10
+	WinGetPos, , , w, h
+	w /= 800.0
+	h /= 600.0
+	x := Round(x * w)
+	y := Round(y * h)
+	dy := Round(dy * h)
+	PixelGetColor, bgr, x, y
+	PixelGetColor, bgr2, x, y+dy
+	;MsgBox %bgr%, %bgr2%
+	return Display_CompareColors(bgr, bgr2)
+}
 
 IPoker_ClickButton(button) {
 	local x, y, w, h, bgr, dx, dy, dy2, box
@@ -1735,7 +1758,11 @@ IPoker_ClickButton(button) {
 */
 
 ;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
-	ClickWindowRect(x, y, w, h)
+	if IPoker_ChatMaximized() {
+		ClickWindowRect(x, y, w, h)
+	}
+	else
+		MsgBox PokerPad will not work if the chat window is not maximized.
 }
 
 
@@ -1785,31 +1812,39 @@ local box, pot, round := IPoker_GetRound(Rounding, Rounding)
 ;mypot2 := IPoker_GetPot(factor)
 ;MsgBox, roundpot: %mypot1%, rawpot: %mypot2%, pot: %pot%
 
-	
-	;MsgBox % IPoker_GetPot(factor)
-	bet := GetRoundedAmount(IPoker_GetPot(factor), round)
-	;box := IPoker_AdjustSize(IPoker_BetBox)
-    ;IPoker_Bet(box, bet)
-	Bet(bet)
-;    Click 720 515 2
-;	Sleep, 600
+	if IPoker_ChatMaximized() {
+		;MsgBox % IPoker_GetPot(factor)
+		bet := GetRoundedAmount(IPoker_GetPot(factor), round)
+		;box := IPoker_AdjustSize(IPoker_BetBox)
+		;IPoker_Bet(box, bet)
+		Bet(bet)
+;   	Click 720 515 2
+;		Sleep, 600
 
 
-    if (GetHotKey("Rtick") && Ipoker_CheckBet(bet))
-    {
-	   IPoker_ClickButton("Raise")
-    }
+		if (GetHotKey("Rtick") && Ipoker_CheckBet(bet))
+		{
+			IPoker_ClickButton("Raise")
+		}
+	}
+	else
+		MsgBox PokerPad will not work if the chat window is not maximized.
 }
 
 
 
 IPoker_FixedBet(factor) {
-	local pot := GetAmount(GetDollarRound(factor * IPoker_GetBlind(true)), IPoker_Decimal)
-	IPoker_Bet(IPoker_BetBox, pot)
-    if (GetHotKey("Ftick") && Ipoker_CheckBet(pot))
-    {
-	   IPoker_ClickButton("Raise")
-    }
+	local pot
+	if IPoker_ChatMaximized() {
+		pot := GetAmount(GetDollarRound(factor * IPoker_GetBlind(true)), IPoker_Decimal)
+		IPoker_Bet(IPoker_BetBox, pot)
+		if (GetHotKey("Ftick") && Ipoker_CheckBet(pot))
+		{
+			IPoker_ClickButton("Raise")
+		}
+	}
+	else
+		MsgBox PokerPad will not work if the chat window is not maximized.
 }
 
 
@@ -1938,10 +1973,12 @@ IPoker_LastHand:
 	return
 IPoker_IncreaseBet:
 IPoker_IncreaseBet2:
+	IPoker_AdjustClick(440,510)
 	Send, {Right}
 	return
 IPoker_DecreaseBet:
 IPoker_DecreaseBet2:
+	IPoker_AdjustClick(440,510)
 	Send, {Left}
 	return
 IPoker_FoldAny:
