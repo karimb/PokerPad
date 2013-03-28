@@ -1664,6 +1664,9 @@ IPoker() {
 	IPoker_BetBox = 715 512 40 6
 	
 	IPoker_PotButton = 660 483 30 7
+	; the pot button has different coords for NL and PL
+	IPoker_PotButton_NL = 660 483 20 7
+	IPoker_PotButton_PL = 700 483 60 7
 	
 	IPoker_ChatBox := CreateArea("16,534,360,60", 780, 557)
 	
@@ -1706,9 +1709,9 @@ IPoker_AdjustClick(x, y, c = 1) {
 	Click %px% %py% 0
 }
 
-/* Return true if the chat window is maximized 
-*/
+; Return true if the chat window is maximized 
 IPoker_ChatMaximized() {
+/*	
 	local w,h,x,y,dx,bgr,bgr2
 	;x := 265
 	x := 380
@@ -1723,7 +1726,9 @@ IPoker_ChatMaximized() {
 	PixelGetColor, bgr, x, y
 	PixelGetColor, bgr2, x, y+dy
 	;MsgBox %bgr%, %bgr2%
-	return Display_CompareColors(bgr, bgr2)
+	return Display_CompareColors(bgr, bgr2) 
+*/
+	return true
 }
 
 IPoker_ClickButton(button) {
@@ -1765,8 +1770,36 @@ IPoker_ClickButton(button) {
 		MsgBox PokerPad will not work if the chat window is not maximized.
 }
 
-
 IPoker_GetPot(factor) {
+	local x, y, w, h, device, context, pixels, box, IPoker_TableTitle
+	
+	; we check if the active table is pot-limit or no-limit,
+	; set the coords of the pot button accordingly
+	; and click it to get the pot size
+
+	WinGetTitle,IPoker_TableTitle,A
+
+	IfInString,IPoker_TableTitle,Pot limit
+		box := IPoker_AdjustSize(IPoker_PotButton_PL)
+	else
+		box := IPoker_AdjustSize(IPoker_PotButton_NL)
+
+	GetWindowArea(x, y, w, h, box, false)
+	ClickWindowRect(x, y, w, h)
+	;select and copy
+	IPoker_AdjustClick(715, 512, 2)
+	Send, ^c
+	local pot := Clipboard
+	if (!pot) {
+		IPoker_AdjustClick(715, 512)
+		Send, ^c
+		pot := Clipboard
+	}
+	return (factor * pot)
+}
+
+
+/*IPoker_GetPot(factor) {
 	local x, y, w, h, device, context, pixels, box
 	
 	;we click on the pot button to get the pot size
@@ -1784,6 +1817,7 @@ IPoker_GetPot(factor) {
 	}
 	return (factor * pot)
 }
+*/
 	
 Ipoker_CheckBet(bet) {
 	IPoker_AdjustClick(715, 512, 2)
