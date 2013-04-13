@@ -298,7 +298,7 @@ SetHotkeys() {
 	names .= "NextWindow_Left,NextWindow_Right,NextWindow_Up,NextWindow_Down,IncreaseBet2,DecreaseBet2,Street1,Street2,Street3"
 	Loop, Parse, names, `,
 		SetHotkey(A_LoopField)
-	names = Fold,Call,Raise
+	names = Fold,Call,Raise,FastFold
 	Loop, Parse, names, `,
 		SetHotkey(A_LoopField, "^")
 	SetHotkey("Lobby", "+")
@@ -378,6 +378,7 @@ InvokeHotkey(action) {
 Fold:
 Call:
 Raise:
+FastFold:
 NumpadDigit:
 ClearBetBox:
 Relative1:
@@ -1646,11 +1647,12 @@ IPoker() {
 	if !ReadColor(theme, "IPoker", "BoxColor")
 		return false
 	
-	; These dimension only works for a window which is 800x600 in size
+	; These dimensions only work for a window which is 798x600 in size
     IPoker_Fold = 442 536 80 10
 	IPoker_CheckFold = 442 560 80 10
 	IPoker_Call = 555 535 60 24
 	IPoker_Raise = 665 530 60 24
+	IPoker_FastFold = 332 535 10 24
 
 	IPoker_AutoPost = 720 590 70 10
 	IPoker_FoldAny = 589 586 70 10
@@ -1731,7 +1733,9 @@ IPoker_ChatMaximized() {
 	return true
 }
 
-IPoker_ClickButton(button) {
+; We use the window handle when several fold are done in a row to make sure 
+;they reach only one window
+IPoker_ClickButton(button, id = "") {
 	local x, y, w, h, bgr, dx, dy, dy2, box
 
 	button := IPoker_%button%
@@ -1741,30 +1745,11 @@ IPoker_ClickButton(button) {
 
 	;MsgBox % "Before: " . button .  " After: " . IPoker_AdjustSize(button)
 	box := IPoker_AdjustSize(button)
-	GetWindowArea(x, y, w, h, box, false)
-/*	if !InStr(A_ThisHotkey, "^") {
-		PixelGetColor, bgr, x-dx, y-dy
-		if Display_CompareColors(bgr, IPoker_BoxColor, IPoker_BoxColorVariation) {
-			x -= dx
-			y -= dy
-			h := Floor(h/2)
-			ClickWindowRect(x, y, w, h)
-			return
-		}
-	}
-	PixelGetColor, bgr, x-dx, y+dy2
-	if Display_CompareColors(bgr, IPoker_BoxColor, IPoker_BoxColorVariation) {
-		x -= dx
-		y += dy2
-		h := Floor(h/2)
-		ClickWindowRect(x, y, w, h)
-		return
-	}
-*/
+	GetWindowArea(x, y, w, h, box, false, id)
 
 ;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
 	if IPoker_ChatMaximized() {
-		ClickWindowRect(x, y, w, h)
+		ClickWindowRect(x, y, w, h, id)
 	}
 	else
 		MsgBox PokerPad will not work if the chat window is not maximized.
@@ -1933,14 +1918,19 @@ IPoker_NumpadDigit:
 	ForwardNumpadKey(A_ThisHotkey)
 	return
 IPoker_Fold:
-	IPoker_ClickButton("Fold")
-	IPoker_ClickButton("CheckFold")
+	IPoker_ClickButton("Fold", id)
+	IPoker_ClickButton("CheckFold", id)
 	return
 IPoker_Call:
 	IPoker_ClickButton("Call")
 	return
 IPoker_Raise:
 	IPoker_ClickButton("Raise")
+	return
+IPoker_FastFold:
+	IPoker_ClickButton("FastFold", id)
+	IPoker_ClickButton("Fold", id)
+	IPoker_ClickButton("CheckFold", id)
 	return
 IPoker_Relative1:
 	IPoker_BetRelativePot(Relative1)
@@ -2315,6 +2305,7 @@ PartyPoker_AllIn:
 	if IsControlVisible(PartyPoker_BetAmount)
 		ControlSetText, % PartyPoker_BetAmount, 999999
 	return
+;%
 PartyPoker_LastHand:
 	ClickControl(PartyPoker_LastHand)
 	return

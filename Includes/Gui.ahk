@@ -71,7 +71,7 @@ Settings() {
 	static tree, table_hotkeys, actions, betting, pot, fixed, street, global_hotkeys, options, options_betting, options_sites, options_autoload, options_reload
 	static sitInAll, sitOutAll, leaveAll, tile, activateTable, autoPostOnAll, autoPostOffAll, suspendHotkeys, debug
 	static lastHand, autoMuck, reload, lobby, allInThisHand
-	static fold, call, raise, clear, foldAny, autoPost, sitOut, left, right, up, down
+	static fold, call, raise, ffold, clear, foldAny, autoPost, sitOut, left, right, up, down
 	static typeBet, randomBet, allIn, incBet, decBet, incBet2, decBet2
 	static factor1, factor2, factor3, factor4, factor5, factor6, factor7, factor8, factor9
 	static relative1, relative2, relative3, relative4, relative5, relative6, relative7, relative8, relative9, rtick
@@ -153,13 +153,15 @@ Settings() {
 	Gui, Add, Edit, Hidden vautoMuck, % GetHotkey("ToggleAutoMuck")
 	
 	rules .= ","
-	ctrlCounts .= ",16"
+	ctrlCounts .= ",18"
 	Gui, Add, Text, Hidden, First Button (Fold):
 	Gui, Add, Edit, Hidden vfold, % GetHotkey("Fold")
 	Gui, Add, Text, Hidden, Second Button (Call):
 	Gui, Add, Edit, Hidden vcall, % GetHotkey("Call")
 	Gui, Add, Text, Hidden, Third Button (Raise):
 	Gui, Add, Edit, Hidden vraise, % GetHotkey("Raise")
+	Gui, Add, Text, Hidden, FastFold:
+	Gui, Add, Edit, Hidden vffold, % GetHotkey("FastFold")
 	Gui, Add, Text, Hidden, Fold To Any Bet:
 	Gui, Add, Edit, Hidden vfoldAny, % GetHotkey("FoldAny")
 	Gui, Add, Text, Hidden, Activate Table Left:
@@ -537,6 +539,7 @@ Settings() {
 		IniWrite, %fold%, Pokerpad.ini, Hotkeys, Fold
 		IniWrite, %call%, Pokerpad.ini, Hotkeys, Call
 		IniWrite, %raise%, Pokerpad.ini, Hotkeys, Raise
+		IniWrite, %ffold%, Pokerpad.ini, Hotkeys, FastFold
 		IniWrite, %clear%, Pokerpad.ini, Hotkeys, ClearBetBox
 		IniWrite, %foldAny%, Pokerpad.ini, Hotkeys, FoldAny
 		IniWrite, %autoPost%, Pokerpad.ini, Hotkeys, AutoPost

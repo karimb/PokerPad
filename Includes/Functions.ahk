@@ -444,6 +444,7 @@ CreateIni() {
 		Fold=NumpadDiv
 		Call=NumpadMult
 		Raise=NumpadSub
+		FastFold=^NumpadDiv
 		ClearBetBox=NumpadEnter
 		FoldAny=^PgUp
 		AutoPost=^PgDn
