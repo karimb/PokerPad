@@ -1,6 +1,15 @@
 PokerPad for Party Poker and iPoker
 -----------------------------------
 
+v0.1.30 (13-04-2013)
+- Added support for FastFold hotkey
+- iPoker: Added protection to make sure a fold doesn't reach
+   different windows
+
+v0.1.29 (28-03-2013)
+- New GetPot function (from 2+2 coon74)
+- removal of the ChatMaximized function as it breaks the software in some cases
+
 v0.1.28 (25-03-2013)
 - iPoker: PokerPad now displays a message if the chat window is not maximised
 - iPoker: Pot Limit tables now supported

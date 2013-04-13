@@ -1,5 +1,5 @@
 PokerPad, originally developed by Xanderz
-This version 0.2 contains changes from the following 2+2 posters:
+This version contains changes from the following 2+2 posters:
 - Donkey111 (Party Poker/Modern Style/Real Money Cash games)
 - xor (original work on iPoker)
 - Brother Love (numerous bug fixes for iPoker and Party)
