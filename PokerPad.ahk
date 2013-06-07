@@ -4133,10 +4133,16 @@ Pacific_AutoTimeBank:
 	Loop, %Wnd% {
 		id := Wnd%A_Index%
 		Display_CreateWindowCapture(device, context, pixels, id)
+		;ControlGet,ctrlid,Hwnd,,%class%,ahk_id %id%
+		;ControlGet,visible,Visible,,,ahk_id %ctrlid%
+		;
 		if (Pacific_CheckTimeBank(id, context)) {
 			Pacific_ClickButton("TimeBank", id)
 		}
 		Display_DeleteWindowCapture(device, context, pixels, id)
+		ControlGet,visible,Visible,,,ahk_id %id%
+		if visible
+			DllCall("RedrawWindow","UInt",id,"UInt",0,"UInt",0,"UInt", 1|4|64|1024)
 	}
 	return
 	
