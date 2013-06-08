@@ -361,8 +361,8 @@ CreateIni() {
 		Path=\Everest Poker\CStart.exe
 		[Ongame]
 		Path=\PokerRoom.com\StartPokerRoom.exe
-		[Absolute]
-		Path=\Absolute Poker\mainclient.exe
+		[Pacific]
+		Path=\PacificPoker\bin\888poker.exe
 		[CakePoker]
 		Path=\Cake Poker\cake.exe
 		Themes=CakePoker
@@ -514,7 +514,7 @@ CheckIniVersion() {
 					}
 				}
 				if (version < 1.01) {
-					IniWrite, \Absolute Poker\mainclient.exe, PokerPad.ini, Absolute, Path
+					IniWrite, \PacificPoker\bin\888poker.exe, PokerPad.ini, Pacific, Path
 					IniWrite, 0xD5EAF9`,16, PokerPad.ini, CDPoker, PotColor
 					IniWrite, 0xFCFDFF`,16, PokerPad.ini, CDPoker, ActionColor
 					IniWrite, 0x2DC2FA, PokerPad.ini, CDPoker, CheckColor

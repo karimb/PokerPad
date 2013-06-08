@@ -46,8 +46,8 @@ if CakePoker_GameWindow
 	Menu, Open, Add, Cake Poker, CakePoker
 if Microgaming_GameWindow
 	Menu, Open, Add, Microgaming, Microgaming
-if Absolute_GameWindow
-	Menu, Open, Add, Absolute, Absolute
+if Pacific_GameWindow
+	Menu, Open, Add, Pacific, Pacific
 Menu, Tray, Add, &Open, :Open
 Menu, Tray, Add
 Menu, Tray, Add, &Pause/Unpause, PauseScript
@@ -133,7 +133,7 @@ EverestPoker:
 Ongame:
 CakePoker:
 Microgaming:
-Absolute:
+Pacific:
 	OpenClient(A_ThisLabel)
 	return
 	
@@ -230,9 +230,9 @@ SetHotkeys() {
 	IniRead, load, PokerPad.ini, General, Microgaming, 1
 	if load
 		Microgaming()
-	IniRead, load, PokerPad.ini, General, Absolute, 1
+	IniRead, load, PokerPad.ini, General, Pacific, 1
 	if load
-		Absolute()
+		Pacific()
 		
 	Hotkey, IfWinActive, ahk_group GameWindows
 	local hotkey, names
@@ -345,7 +345,7 @@ Notify(action, id) {
 }
 
 InvokeHotkey(action) {
-	local id
+	local id, title
 	if UseMouse {
 		MouseGetPos, , , id
 	} else {
@@ -369,8 +369,12 @@ InvokeHotkey(action) {
 	WinGetClass, class
 	StringReplace, class, class, .
 	local s := Site%class%
-	if !s
-		s := "EverestPoker"
+	; PartyPoker and Pacific have the same ahk class so we use a dirty hack :(
+	if (class == "#32770") {
+		WinGetTitle title, ` -`  ahk_id %id%
+		if !title
+			s := "Pacific"
+	}
 	local label := s . "_" . action
 	if IsLabel(label)
 		GoSub, %label%
@@ -491,8 +495,8 @@ AutoPostAll(on) {
 		CakePoker_AutoPostAll(on)
 	if Microgaming_GameWindow
 		Microgaming_AutoPostAll(on)
-	if Absolute_GameWindow
-		Absolute_AutoPostAll(on)
+	if Pacific_GameWindow
+		Pacific_AutoPostAll(on)
 }
 
 SitInAll(in) {
@@ -513,8 +517,8 @@ SitInAll(in) {
 		CakePoker_SitInAll(in)
 	if Microgaming_GameWindow
 		Microgaming_SitInAll(in)
-	if Absolute_GameWindow
-		Absolute_SitInAll(in)
+	if Pacific_GameWindow
+		Pacific_SitInAll(in)
 }
 
 LeaveAll:
@@ -534,8 +538,8 @@ LeaveAll:
 		CakePoker_CloseGameWindows(CakePoker_GameWindow)
 	if Microgaming_GameWindow
 		Microgaming_CloseGameWindows(Microgaming_GameWindow)
-	if Absolute_GameWindow
-		Absolute_CloseGameWindows(Absolute_GameWindow)
+	if Pacific_GameWindow
+		Pacific_CloseGameWindows(Pacific_GameWindow)
 	return
 
 Debug() {
@@ -2080,7 +2084,7 @@ PartyPoker() {
 	PartyPoker_AutoPost = Button1
 	
 	SetClientHotkeys("PartyPoker")
-	GroupAdd, GameWindows, / ahk_class #32770
+	GroupAdd, GameWindows, "- ahk_class #32770"
 	return true
 }
 
@@ -3824,128 +3828,188 @@ Microgaming_SitOut:
 
 
 
+;%
+; ( [] )..( [] )   Pacific Implementation   ( [] )..( [] ) 
 
-; ( [] )..( [] )   Absolute Implementation   ( [] )..( [] ) 
+#Include Includes\Pacific.ahk
 
-#Include Includes\Absolute.ahk
-
-Absolute() {
+Pacific() {
 	global
-
-	Absolute_Fold := CreateArea("424,511,100,35", 780, 557)
-	Absolute_Call := CreateArea("546,511,100,35", 780, 557)
-	Absolute_Raise := CreateArea("668,511,100,35", 780, 557)
-	Absolute_AutoPost := CreateArea("445,2,120,10", 780, 557)
-	Absolute_SitOut := CreateArea("445,17,120,10", 780, 557)
-	Absolute_AutoMuck := CreateArea("578,2,180,10", 780, 557)
-	Absolute_Lobby := CreateArea("10,10,40,10", 780, 557)
-	Absolute_LastHand := CreateArea("237,10,40,10", 780, 557)
-	Absolute_Options := CreateArea("300,10,50,10", 780, 557)
-	Absolute_FoldAny := CreateArea("419,488,100,8", 780, 557)
-	Absolute_IncreaseBet := CreateArea("628,488,3,6", 780, 557)
-	Absolute_DecreaseBet := CreateArea("772,488,3,6", 780, 557)
-	Absolute_Chat := CreateArea("60,490,320,40", 780, 557)
+	; All boxes assumes a window dimension of 800x579
+	Pacific_Fold = 335 475 135 12
+	Pacific_CheckFold = 335 510 135 10
+	Pacific_Call = 490 475 135 12
+	Pacific_Raise = 645 475 135 12
+	Pacific_FoldAny = 643 559 5 5
 	
-	Absolute_GameWindow = Good Luck ahk_class DxWndClass
-	Absolute_LobbyWindow = ahk_class INNOCO_SEXYMAN
-	Absolute_LastHandWindow = ^Instant Replay ahk_class DxWndClass
-	SiteDxWndClass = Absolute
-	SetClientHotkeys("Absolute")
-	GroupAdd, GameWindows, Good Luck ahk_class DxWndClass
+	Pacific_AutoPost = 486 558 5 5
+	Pacific_SitOut = 332 558 5 5
+	
+	Pacific_AutoMuck = 
+	Pacific_Lobby = 662 58 120 12
+	;Pacific_LastHand = 
+	;Pacific_Options =
+	;Pacific_Settings
+	Pacific_TimeBank = 680 430 105 10
+	Pacific_Chat = 16 551 155 12
+	
+	Pacific_IncreaseBet = 700 535 5 5
+	Pacific_DecreaseBet = 495 535 5 5
+	
+	Pacific_Pot = 661 511 45 10
+	Pacific_BetBox = 720 532 55 12
+	
+	Pacific_GameWindow = / ahk_class #32770
+	Pacific_LobbyWindow = Lobby ahk_class #32770
+	Pacific_LastHandWindow = ^Instant Replay ahk_class DxWndClass
+	; Same as Party :(
+	;Site#32770 = Pacific
+	SetClientHotkeys("Pacific")
+	GroupAdd, GameWindows, / ahk_class #32770
+	SetTimer Pacific_AutoTimeBank, 4000
 }
 
+Pacific_GetPot(factor) {
+	local x, y, w, h, device, context, pixels, box
 
-Absolute_BetRelativePot(factor) {
-	local clip := ClipboardAll
-	ClickWindowArea2(Absolute_Chat)
-	Send, ^a^c
-	local text := Clipboard
-	Clipboard := clip
-	local j := 0
-	Loop {
-		local i := InStr(text, "[Dealer] Blind time", true, j+1)
-		if !i
-			break
-		j := i
+	box := Pacific_AdjustSize(Pacific_Pot)
+	
+	GetWindowArea(x, y, w, h, box, false)
+	ClickWindowRect(x, y, w, h)
+	;select and copy
+	Pacific_AdjustClick(722, 537, 2)
+	Send, ^c
+	local pot := Clipboard
+	if (!pot) {
+		Pacific_AdjustClick(722, 537)
+		Send, ^c
+		pot := Clipboard
 	}
-	text := SubStr(text, InStr(text, "`n", true, j))
-	local pot := 0, call := 0, match, match0, match1
-	Loop, Parse, text, `n, `r
-		if RegExMatch(A_LoopField, "^\[Dealer] \w+ (?:posts the small blind|posts the big blind|posts|calls|bets|raises|moves all-in\[Raise\]) \$([\d\.]+)", match) {
-			call := match1
-			pot += call
-		} else if RegExMatch(A_LoopField, "^<< DEALING (?:FLOP|TURN|RIVER)")
-			call := 0
-	WinActivate
-	Absolute_Bet((pot + call) * factor + call)
+	return (factor * pot)
+}
+	
+Pacific_CheckBet(bet) {
+	Pacific_AdjustClick(722, 537, 2)
+	Send, ^c
+	if (Clipboard == bet)
+		return 1
+	else
+		return 0
+}
+	
+Pacific_Bet(ByRef betbox, bet = "") {
+	Pacific_AdjustClick(722, 537, 2)
+	Bet(bet)
 }
 
-Absolute_FixedBet(factor) {
-	Absolute_Bet(factor * Absolute_GetBlind(true))
-	Absolute_ClickButton("Raise")
+Pacific_BetRelativePot(factor) {
+	local box, pot, round := Pacific_GetRound(Rounding, Rounding)
+	bet := GetRoundedAmount(Pacific_GetPot(0.95 * factor), round)
+	Bet(bet)
+	if (GetHotKey("Rtick") && Pacific_CheckBet(bet)) {
+		Pacific_ClickButton("Raise")
+	}
 }
 
-Absolute_Bet(bet = "") {
-	Send {Home}
-	Loop, 9
-		Send, {Delete}
-	if bet
-		Send, %bet%
+Pacific_FixedBet(factor) {
+	local pot
+	pot := GetAmount(GetDollarRound(factor * Pacific_GetBlind(true)), Pacific_Decimal)
+	Pacific_Bet(Pacific_BetBox, pot)
+	if (GetHotKey("Ftick") && Pacific_CheckBet(pot)) {
+		Pacific_ClickButton("Raise")
+	}
 }
 
 
-Absolute_GetRound(rounding, default) {
+Pacific_CloseGameWindows(title) {
+	local windows, id
+	WinGet windows, List, %title%
+	Loop, %windows%	{
+		id := windows%A_Index%
+		if (!IsChecked(Pacific_SitOut, false, Pacific_CheckColor, id)) {
+			ClickWindowArea(Pacific_SitOut, false, id)
+		}
+		WinClose, ahk_id %id%
+	}
+}
+
+Pacific_SitInAll(in) {
+	global
+	if !WinExist(Pacific_GameWindow)
+		return
+	Pacific_CheckAll(Pacific_SitOut, !in)
+}
+
+Pacific_AutoPostAll(on) {
+	global
+	if !WinExist(Pacific_GameWindow)
+		return
+	Pacific_CheckAll(Pacific_AutoPost, on)
+}
+
+Pacific_CheckAll(ByRef checkbox, checked) {
+	local windows, id
+	WinGet windows, List, %Pacific_GameWindow%
+	Loop, %windows%	{
+		id := windows%A_Index%
+		if (IsChecked(checkbox, false, Pacific_CheckColor, id) != checked) {
+			ClickWindowArea(checkbox, false, id)
+		}
+	}
+}
+
+
+Pacific_GetRound(rounding, default) {
 	if (rounding < -1)
-		return Absolute_GetBlind(rounding+2)
+		return Pacific_GetBlind(rounding+2)
 	return default
 }
 
-
-Absolute_ClickButton(button) {
-	local x, y, w, h, bgr, color := 0xF4F4F4, v := 8
-	local area := Absolute_%button%
-	GetWindowArea(x, y, w, h, area)
-	local h2 := Floor(h/2)
-	if !InStr(A_ThisHotkey, "^") {
-		PixelGetColor, bgr, x, y
-		if (Display_CompareColors(bgr, color, v) || Display_IsRed(bgr)) {
-			h := Round(h/4)
-			ClickWindowRect2(x, y, w, h)
-			return
-		}
-	}
-	PixelGetColor, bgr, x, y + h
-	if (Display_CompareColors(bgr, color, v) || Display_IsRed(bgr)) {
-		h := Round(h/4)
-		y += Round(h*3)
-		ClickWindowRect2(x, y, w, h)
-	} else
-		ClickWindowRect2(x, y, w, h)
+Pacific_AdjustSize(box, id = "") {
+	local box0, box1, box2, box3, box4, w, h
+	if (id != "")
+		WinGetPos, , , w, h, ahk_id %id%
+	else
+		WinGetPos, , , w, h
+		
+	w /= 800.0
+	h /= 579.0
+	StringSplit, box, box, %A_Space%
+	box1 *= w
+	box2 *= h
+	box3 *= w
+	box4 *= h
+	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
 }
 
-Absolute_AutoPostAll(on) {
-	global
-	Absolute_CheckAll(Absolute_AutoPost, on)
+;%
+
+;AdjustClick clicks to the area of the screen indicated by x and y
+;with mouse button c (c=0 moves without click) 
+Pacific_AdjustClick(x, y, c = 1) {
+	local px,py,w, h
+	WinGetPos, , , w, h
+	w /= 800.0
+	h /= 579.0
+	x := Round(x * w)
+	y := Round(y * h)
+	MouseGetPos, px, py
+	Click %x% %y% %c%
+	Click %px% %py% 0
 }
 
-Absolute_SitInAll(in) {
-	global
-	Absolute_CheckAll(Absolute_SitOut, !in)
+Pacific_ClickButton(button, id = "") {
+	local x, y, w, h, box
+	button := Pacific_%button%
+;MsgBox % "Before: " . button .  " After: " . Pacific_AdjustSize(button)
+	box := Pacific_AdjustSize(button, id)
+	GetWindowArea(x, y, w, h, box, false, id)
+;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
+	ClickWindowRect(x, y, w, h, id)	
 }
 
-Absolute_CheckAll(ByRef checkbox, checked) {
-	local windows, id, x, y, w, h
-	WinGet windows, List, %Absolute_GameWindow%
-	Loop, %windows%	{
-		id := windows%A_Index%
-		if !WinExist("ahk_id " . id)
-			continue
-		if (Absolute_IsChecked(checkbox, x, y, w, h) != checked)
-			ClickWindowRect2(x, y, w, h)
-	}
-}
 
-Absolute_IsChecked(ByRef checkbox, ByRef x = "", ByRef y = "", ByRef w = "", ByRef h = "") {
+Pacific_IsChecked(ByRef checkbox, ByRef x = "", ByRef y = "", ByRef w = "", ByRef h = "") {
 	GetWindowArea(x, y, w, h, checkbox, true)
 	Display_CreateWindowCapture(device, context, pixels, id)
 	bgr := Display_GetPixel(context, x + w, y + 1)
@@ -3953,125 +4017,129 @@ Absolute_IsChecked(ByRef checkbox, ByRef x = "", ByRef y = "", ByRef w = "", ByR
 	return Display_IsRed(bgr)
 }
 
-Absolute_CloseGameWindows(title) {
-	local windows, id, x, y, w, h
-	WinGet windows, List, %title%
-	Loop, %windows%	{
- 		id := windows%A_Index%
-		if !WinExist("ahk_id " . id)
-			continue
-		if !Absolute_IsChecked(Absolute_SitOut, x, y, w, h)
-			ClickWindowRect2(x, y, w, h)
-		WinClose, ahk_id %id%
-	}
-}
 
-Absolute_Activate:
-	WinActivate, %Absolute_GameWindow%
+
+
+Pacific_Activate:
+	WinActivate, %Pacific_GameWindow%
 	return
-Absolute_NumpadDigit:
+Pacific_NumpadDigit:
 	ForwardNumpadKey(A_ThisHotkey)
 	return
-Absolute_Fold:
-	Absolute_ClickButton("Fold")
+Pacific_Fold:
+	Pacific_ClickButton("Fold")
+	Pacific_ClickButton("CheckFold")
 	return
-Absolute_Call:
-	Absolute_ClickButton("Call")
+Pacific_Call:
+	Pacific_ClickButton("Call")
 	return
-Absolute_Raise:
-	Absolute_ClickButton("Raise")
+Pacific_Raise:
+	Pacific_ClickButton("Raise")
 	return
-Absolute_Relative1:
-	Absolute_BetRelativePot(Relative1)
+Pacific_Relative1:
+	Pacific_BetRelativePot(Relative1)
 	return
-Absolute_Relative2:
-	Absolute_BetRelativePot(Relative2)
+Pacific_Relative2:
+	Pacific_BetRelativePot(Relative2)
 	return
-Absolute_Relative3:
-	Absolute_BetRelativePot(Relative3)
+Pacific_Relative3:
+	Pacific_BetRelativePot(Relative3)
 	return
-Absolute_Relative4:
-	Absolute_BetRelativePot(Relative4)
+Pacific_Relative4:
+	Pacific_BetRelativePot(Relative4)
 	return
-Absolute_Relative5:
-	Absolute_BetRelativePot(Relative5)
+Pacific_Relative5:
+	Pacific_BetRelativePot(Relative5)
 	return
-Absolute_Relative6:
-	Absolute_BetRelativePot(Relative6)
+Pacific_Relative6:
+	Pacific_BetRelativePot(Relative6)
 	return
-Absolute_Relative7:
-	Absolute_BetRelativePot(Relative7)
+Pacific_Relative7:
+	Pacific_BetRelativePot(Relative7)
 	return
-Absolute_Relative8:
-	Absolute_BetRelativePot(Relative8)
+Pacific_Relative8:
+	Pacific_BetRelativePot(Relative8)
 	return
-Absolute_Relative9:
-	Absolute_BetRelativePot(Relative9)
+Pacific_Relative9:
+	Pacific_BetRelativePot(Relative9)
 	return
-Absolute_RandomBet:
-	Absolute_BetRelativePot(GetRandomBet())
+Pacific_RandomBet:
+	Pacific_BetRelativePot(GetRandomBet())
 	return
-Absolute_Fixed1:
-	Absolute_FixedBet(Fixed1)
+Pacific_Fixed1:
+	Pacific_FixedBet(Fixed1)
 	return
-Absolute_Fixed2:
-	Absolute_FixedBet(Fixed2)
+Pacific_Fixed2:
+	Pacific_FixedBet(Fixed2)
 	return
-Absolute_Fixed3:
-	Absolute_FixedBet(Fixed3)
+Pacific_Fixed3:
+	Pacific_FixedBet(Fixed3)
 	return
-Absolute_Fixed4:
-	Absolute_FixedBet(Fixed4)
+Pacific_Fixed4:
+	Pacific_FixedBet(Fixed4)
 	return
-Absolute_Fixed5:
-	Absolute_FixedBet(Fixed5)
+Pacific_Fixed5:
+	Pacific_FixedBet(Fixed5)
 	return
-Absolute_Fixed6:
-	Absolute_FixedBet(Fixed6)
+Pacific_Fixed6:
+	Pacific_FixedBet(Fixed6)
 	return
-Absolute_Fixed7:
-	Absolute_FixedBet(Fixed7)
+Pacific_Fixed7:
+	Pacific_FixedBet(Fixed7)
 	return
-Absolute_Fixed8:
-	Absolute_FixedBet(Fixed8)
+Pacific_Fixed8:
+	Pacific_FixedBet(Fixed8)
 	return
-Absolute_Fixed9:
-	Absolute_FixedBet(Fixed9)
+Pacific_Fixed9:
+	Pacific_FixedBet(Fixed9)
 	return
-Absolute_AllIn:
+Pacific_AllIn:
 	Send, {F8}
 	return
-Absolute_LastHand:
-	ClickWindowArea2(Absolute_LastHand)
+Pacific_LastHand:
+	ClickWindowArea2(Pacific_LastHand)
 	return
-Absolute_IncreaseBet:
-Absolute_IncreaseBet2:
-	ClickWindowArea2(Absolute_IncreaseBet)
+Pacific_IncreaseBet:
+Pacific_IncreaseBet2:
+	Pacific_ClickButton("IncreaseBet")
 	return
-Absolute_DecreaseBet:
-Absolute_DecreaseBet2:
-	ClickWindowArea2(Absolute_DecreaseBet)
+Pacific_DecreaseBet:
+Pacific_DecreaseBet2:
+	Pacific_ClickButton("DecreaseBet")
 	return
-Absolute_FoldAny:
-	ClickWindowArea2(Absolute_FoldAny)
+Pacific_FoldAny:
+	ClickWindowArea2(Pacific_FoldAny)
 	return
-Absolute_AutoPost:
-	ClickWindowArea2(Absolute_AutoPost)
+Pacific_AutoPost:
+	ClickWindowArea2(Pacific_AutoPost)
 	return
-Absolute_ToggleAutoMuck:
-	ClickWindowArea2(Absolute_AutoMuck)
+Pacific_ToggleAutoMuck:
+	ClickWindowArea2(Pacific_AutoMuck)
 	return
-Absolute_AllInThisHand:
-	TrayTip, Not Supported!, All In*** is not supported for Absolute.
+Pacific_AllInThisHand:
+	TrayTip, Not Supported!, All In*** is not supported for Pacific.
 	return
-Absolute_Reload:
-	Absolute_Reload(InStr(A_ThisHotkey, "^") ? false : true)
+Pacific_Reload:
+	; do nothing
 	return
-Absolute_Lobby:
-	ClickWindowArea2(Absolute_Lobby)
+Pacific_Lobby:
+	ClickWindowArea2(Pacific_Lobby)
 	return
-Absolute_SitOut:
-	ClickWindowArea2(Absolute_SitOut)
+Pacific_SitOut:
+	ClickWindowArea2(Pacific_SitOut)
 	return
-	
+Pacific_AutoTimeBank:
+	WinGet Wnd, List, / ahk_class #32770,,` -` ,
+	Loop, %Wnd% {
+		id := Wnd%A_Index%
+		Display_CreateWindowCapture(device, context, pixels, id)
+		if (Pacific_CheckTimeBank(id, context)) {
+			Pacific_ClickButton("TimeBank", id)
+		}
+		Display_DeleteWindowCapture(device, context, pixels, id)
+		ControlGet,visible,Visible,,,ahk_id %id%
+		if visible
+			DllCall("RedrawWindow","UInt",id,"UInt",0,"UInt",0,"UInt", 1|4|64|1024)
+	}
+	return
 	

@@ -79,9 +79,9 @@ Settings() {
 	static fixed, fixed1, fixed2, fixed3, fixed4, fixed5, fixed6, fixed7, fixed8, fixed9, ftick
 	static preflop1, flop1, turn1, river1, street1, preflop2, flop2, turn2, river2, street2, preflop3, flop3, turn3, river3, street3
 	static betRounding, betIncrement, betIncrement2, minRandom, maxRandom, monitors, tables, mouse
-	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, absolute
-	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_absolute
-	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_absolute
+	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific
+	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific
+	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific
 	static theme_stars, theme_ipoker, theme_cake, theme_micro
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
@@ -100,7 +100,7 @@ Settings() {
 	betting := TV_Add("Betting", table_hotkeys)
 	pot := TV_Add("Pot Bets", table_hotkeys)
 	fixed := TV_Add("Fixed Bets", table_hotkeys)
-	street := TV_Add("Street Bets", table_hotkeys)
+	;street := TV_Add("Street Bets", table_hotkeys)
 	options := TV_Add("Options", 0, "Expand Bold")
 	options_betting := TV_Add("Betting", options)
 	options_sites := TV_Add("Sites", options)
@@ -112,7 +112,7 @@ Settings() {
 	sites_ongame := TV_Add("Ongame", options_sites)
 	sites_cake := TV_Add("Cake Poker", options_sites)
 	sites_micro := TV_Add("Microgaming", options_sites)
-	sites_absolute := TV_Add("Absolute Poker", options_sites)
+	sites_pacific := TV_Add("Pacific Poker", options_sites)
 	options_reload := TV_Add("Reload", options)
 	options_autoload := TV_Add("Auto Load", options)
 
@@ -260,7 +260,7 @@ Settings() {
 	Gui, Add, Checkbox, Hidden vftick Checked%checked%, Auto-bet
 	
 
-
+/*
 	rules .= ",c5 b10_n0 w10|a1|a1|a1|a1__n0|w60|w60|w60|w60_c3 a2 v1 b10|c2 w120 b10"
 	ctrlCounts .= ",23"
 	Gui, Add, Text, Hidden, Enter fraction/decimal value for pot bets.`nEnter integer follwed by b for fixed bets (e.g. 4b).
@@ -288,6 +288,7 @@ Settings() {
 	Gui, Add, Edit, Hidden vriver3, % GetSetting("Bets", "River3", A_Space)
 	Gui, Add, Text, Hidden, Hotkey:
 	Gui, Add, Edit, Hidden vstreet3, % GetHotkey("Street3")
+*/
 
 	
 	rules .= ",c2 t3 b3__a2 v1|w40||n0 c2"
@@ -340,8 +341,8 @@ Settings() {
 	Gui, Add, CheckBox, Hidden Checked%load% vcake, Cake Poker
 	IniRead, load, PokerPad.ini, General, Microgaming, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vmicro, Microgaming
-	IniRead, load, PokerPad.ini, General, Absolute, 1
-	Gui, Add, CheckBox, Hidden Checked%load% vabsolute, Absolute Poker
+	IniRead, load, PokerPad.ini, General, Pacific, 1
+	Gui, Add, CheckBox, Hidden Checked%load% vpacific, Pacific Poker
 
 	rules .= ",a2 v1|w200"
 	ctrlCounts .= ",2"
@@ -420,7 +421,7 @@ Settings() {
 	rules .= ","
 	ctrlCounts .= ",2"
 	Gui, Add, Text, Hidden, Path:
-	Gui, Add, Edit, Hidden vpath_absolute, % GetPath("Absolute")
+	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
 	ctrlCounts .= ",6"
@@ -626,7 +627,7 @@ Settings() {
 		IniWrite, %ongame%, Pokerpad.ini, General, Ongame
 		IniWrite, %cake%, Pokerpad.ini, General, CakePoker
 		IniWrite, %micro%, Pokerpad.ini, General, Microgaming
-		IniWrite, %absolute%, Pokerpad.ini, General, Absolute
+		IniWrite, %pacific%, Pokerpad.ini, General, Pacific
 		
 		IniWrite, %path_fulltilt%, Pokerpad.ini, FullTilt, Path
 		IniWrite, %path_stars%, Pokerpad.ini, PokerStars, Path
@@ -636,7 +637,7 @@ Settings() {
 		IniWrite, %path_ongame%, Pokerpad.ini, Ongame, Path
 		IniWrite, %path_cake%, Pokerpad.ini, CakePoker, Path
 		IniWrite, %path_micro%, Pokerpad.ini, Microgaming, Path
-		IniWrite, %path_absolute%, Pokerpad.ini, Absolute, Path
+		IniWrite, %path_pacific%, Pokerpad.ini, Pacific, Path
 		
 		IniWrite, %theme_stars%, PokerPad.ini, PokerStars, Theme
 		IniWrite, %theme_ipoker%, PokerPad.ini, IPoker, Theme
@@ -693,36 +694,37 @@ Settings() {
 				selected := 5
 			else if (A_EventInfo == fixed)
 				selected := 6
-			else if (A_EventInfo == street)
-				selected := 7
+			/* else if (A_EventInfo == street)
+				selected := 7 
+			*/
 			else if (A_EventInfo == options)
-				selected := 8
+				selected := 7
 			else if (A_EventInfo == options_betting)
-				selected := 9
+				selected := 8
 			else if (A_EventInfo == options_sites)
-				selected := 10
+				selected := 9
 			else if (A_EventInfo == options_reload)
-				selected := 20
-			else if (A_EventInfo == options_autoload)
-				selected := 21
-			else if (A_EventInfo == sites_fulltilt)
-				selected := 11
-			else if (A_EventInfo == sites_stars)
-				selected := 12
-			else if (A_EventInfo == sites_ipoker)
-				selected := 13
-			else if (A_EventInfo == sites_party)
-				selected := 14
-			else if (A_EventInfo == sites_everest)
-				selected := 15
-			else if (A_EventInfo == sites_ongame)
-				selected := 16
-			else if (A_EventInfo == sites_cake)
-				selected := 17
-			else if (A_EventInfo == sites_micro)
-				selected := 18
-			else if (A_EventInfo == sites_absolute)
 				selected := 19
+			else if (A_EventInfo == options_autoload)
+				selected := 20
+			else if (A_EventInfo == sites_fulltilt)
+				selected := 10
+			else if (A_EventInfo == sites_stars)
+				selected := 11
+			else if (A_EventInfo == sites_ipoker)
+				selected := 12
+			else if (A_EventInfo == sites_party)
+				selected := 13
+			else if (A_EventInfo == sites_everest)
+				selected := 14
+			else if (A_EventInfo == sites_ongame)
+				selected := 15
+			else if (A_EventInfo == sites_cake)
+				selected := 16
+			else if (A_EventInfo == sites_micro)
+				selected := 17
+			else if (A_EventInfo == sites_pacific)
+				selected := 18
 			Settings_SetVisibility(ctrls, ctrlCounts, selected, "Show")
 		}
 		return
