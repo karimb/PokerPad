@@ -1,5 +1,10 @@
-PokerPad for Party Poker and iPoker
------------------------------------
+PokerPad for Party Poker, iPoker and 888
+----------------------------------------
+
+v0.1.31 (08-06-2013)
+- PokerPad Project transfered to karimb (bl1 is still a contributor)
+- Initial 888 support added
+- GUI Clean-up initiated
 
 v0.1.30 (13-04-2013)
 - Added support for FastFold hotkey
