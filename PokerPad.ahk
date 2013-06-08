@@ -3866,7 +3866,7 @@ Pacific() {
 	;Site#32770 = Pacific
 	SetClientHotkeys("Pacific")
 	GroupAdd, GameWindows, / ahk_class #32770
-	SetTimer Pacific_AutoTimeBank, 3000
+	SetTimer Pacific_AutoTimeBank, 4000
 }
 
 Pacific_GetPot(factor) {
@@ -4129,13 +4129,10 @@ Pacific_SitOut:
 	ClickWindowArea2(Pacific_SitOut)
 	return
 Pacific_AutoTimeBank:
-	WinGet Wnd, List, ahk_class #32770,,` -` ,
+	WinGet Wnd, List, / ahk_class #32770,,` -` ,
 	Loop, %Wnd% {
 		id := Wnd%A_Index%
 		Display_CreateWindowCapture(device, context, pixels, id)
-		;ControlGet,ctrlid,Hwnd,,%class%,ahk_id %id%
-		;ControlGet,visible,Visible,,,ahk_id %ctrlid%
-		;
 		if (Pacific_CheckTimeBank(id, context)) {
 			Pacific_ClickButton("TimeBank", id)
 		}
