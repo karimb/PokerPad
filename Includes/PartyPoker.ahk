@@ -12,32 +12,11 @@ PartyPoker_Reload(max = true) {
 
 	
 PartyPoker_GetBlind(big) {
-	local blind, s, e
-	/*
-	ControlGetText, blind, Static6
-	if blind {
-		;MsgBox Static6: %blind%
-		if big {
-			s := InStr(blind, "(") + 1
-			e := InStr(blind, "/", true, s)
-		} else {
-			s := InStr(blind, "/") + 1
-			e := StrLen(blind)
-		}
-	} else {
-	*/
-	WinGetTitle, blind
-	;MsgBox Title: %blind%
-	StringGetPos, s, blind, /, R
-	if big {
-		s += 2
-		e := StrLen(blind)+1
-	} else {
-		e := s + 1
-		StringGetPos, s, blind, %A_Space%, R, % StrLen(blind)-s
-		s += 2
-	}
-	;}
-	return CurrencyToFloat(SubStr(blind, s, e-s), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
+	local blind, title
+	WinGetTitle, title
+	RegExMatch(title, " \D?(\d+\.?\d*)/\D?(\d+\.?\d*)", match)
+	blind := big ? match2 : match1
+	return CurrencyToFloat(blind)
+	;return CurrencyToFloat(SubStr(blind, s, e-s), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
 }
 
