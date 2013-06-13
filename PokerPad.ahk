@@ -569,6 +569,9 @@ Debug() {
 	Loop, Read, PokerPad.ini
 		FileAppend, %A_LoopReadLine%`n, % file
 }
+
+;%
+
 Debug:
 	Critical, On
 	Debug()
@@ -1760,7 +1763,7 @@ IPoker_ClickButton(button, id = "") {
 }
 
 IPoker_GetPot(factor) {
-	local x, y, w, h, device, context, pixels, box, IPoker_TableTitle
+	local x, y, w, h, device, context, pixels, box, pot, IPoker_TableTitle
 	
 	; we check if the active table is pot-limit or no-limit,
 	; set the coords of the pot button accordingly
@@ -1775,35 +1778,27 @@ IPoker_GetPot(factor) {
 
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
+	Sleep, 200
 	;select and copy
-	IPoker_AdjustClick(715, 512, 2)
-	Send, ^c
-	local pot := Clipboard
-	if (!pot) {
-		IPoker_AdjustClick(715, 512)
-		Send, ^c
-		pot := Clipboard
-	}
+	IPoker_AdjustClick(715, 512)
+	Send, {Home}+{End}^c
+	pot := Clipboard
 	return (factor * pot)
 }
 
 
 /*IPoker_GetPot(factor) {
-	local x, y, w, h, device, context, pixels, box
+	local x, y, w, h, device, context, pixels, box, pot
 	
 	;we click on the pot button to get the pot size
 	box := IPoker_AdjustSize(IPoker_PotButton)
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
+	Sleep, 200
 	;select and copy
-	IPoker_AdjustClick(715, 512, 2)
-	Send, ^c
-	local pot := Clipboard
-	if (!pot) {
-		IPoker_AdjustClick(715, 512)
-		Send, ^c
-		pot := Clipboard
-	}
+	IPoker_AdjustClick(715, 512)
+	Send, {Home}+{End}^c
+	pot := Clipboard
 	return (factor * pot)
 }
 */
@@ -3856,7 +3851,7 @@ Pacific() {
 	Pacific_IncreaseBet = 700 535 5 5
 	Pacific_DecreaseBet = 495 535 5 5
 	
-	Pacific_Pot = 661 511 45 10
+	Pacific_Pot = 661 511 45 5
 	Pacific_BetBox = 720 532 55 12
 	
 	Pacific_GameWindow = / ahk_class #32770
@@ -3870,21 +3865,25 @@ Pacific() {
 }
 
 Pacific_GetPot(factor) {
-	local x, y, w, h, device, context, pixels, box
+	local x, y, w, h, device, context, pixels, box, pot, pot2
 
 	box := Pacific_AdjustSize(Pacific_Pot)
 	
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
+	Sleep, 200
 	;select and copy
-	Pacific_AdjustClick(722, 537, 2)
-	Send, ^c
-	local pot := Clipboard
-	if (!pot) {
-		Pacific_AdjustClick(722, 537)
-		Send, ^c
-		pot := Clipboard
-	}
+	Pacific_AdjustClick(722, 537)
+	Send, {Home}+{End}^c
+	pot := Clipboard
+/*	local title
+	WinGetTitle, title
+	FileAppend
+	(
+	%title% - %A_Hour%:%A_Min%:%A_Sec% - %pot%
+	
+	),log.txt
+*/
 	return (factor * pot)
 }
 	
@@ -3904,7 +3903,7 @@ Pacific_Bet(ByRef betbox, bet = "") {
 
 Pacific_BetRelativePot(factor) {
 	local box, pot, round := Pacific_GetRound(Rounding, Rounding)
-	bet := GetRoundedAmount(Pacific_GetPot(0.95 * factor), round)
+	bet := GetRoundedAmount(Pacific_GetPot(factor), round)
 	Bet(bet)
 	if (GetHotKey("Rtick") && Pacific_CheckBet(bet)) {
 		Pacific_ClickButton("Raise")
