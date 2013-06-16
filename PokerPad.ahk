@@ -1804,8 +1804,8 @@ IPoker_GetPot(factor) {
 */
 	
 Ipoker_CheckBet(bet) {
-	IPoker_AdjustClick(715, 512, 2)
-	Send, ^c
+	IPoker_AdjustClick(715, 512)
+	Send, {Home}+{End}^c
 	if (Clipboard == bet)
 		return 1
 	else
@@ -1814,7 +1814,8 @@ Ipoker_CheckBet(bet) {
 	
 
 IPoker_Bet(ByRef betbox, bet = "") {
-	IPoker_AdjustClick(715, 512, 2)
+	IPoker_AdjustClick(715, 512)
+	Send, {Home}+{End}
 	;SendInput %bet%
 	Bet(bet)
 
@@ -3888,8 +3889,8 @@ Pacific_GetPot(factor) {
 }
 	
 Pacific_CheckBet(bet) {
-	Pacific_AdjustClick(722, 537, 2)
-	Send, ^c
+	Pacific_AdjustClick(722, 537)
+	Send, {Home}+{End}^c
 	if (Clipboard == bet)
 		return 1
 	else
@@ -3897,7 +3898,8 @@ Pacific_CheckBet(bet) {
 }
 	
 Pacific_Bet(ByRef betbox, bet = "") {
-	Pacific_AdjustClick(722, 537, 2)
+	Pacific_AdjustClick(722, 537)
+	Send, {Home}+{End}
 	Bet(bet)
 }
 

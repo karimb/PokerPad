@@ -104,17 +104,17 @@ Settings() {
 	options := TV_Add("Options", 0, "Expand Bold")
 	options_betting := TV_Add("Betting", options)
 	options_sites := TV_Add("Sites", options)
-	sites_fulltilt := TV_Add("Full Tilt", options_sites)
-	sites_stars := TV_Add("Poker Stars", options_sites)
+	;sites_fulltilt := TV_Add("Full Tilt", options_sites)
+	;sites_stars := TV_Add("Poker Stars", options_sites)
 	sites_ipoker := TV_Add("iPoker", options_sites)
 	sites_party := TV_Add("Party Poker", options_sites)
-	sites_everest := TV_Add("Everest Poker", options_sites)
-	sites_ongame := TV_Add("Ongame", options_sites)
-	sites_cake := TV_Add("Cake Poker", options_sites)
-	sites_micro := TV_Add("Microgaming", options_sites)
+	;sites_everest := TV_Add("Everest Poker", options_sites)
+	;sites_ongame := TV_Add("Ongame", options_sites)
+	;sites_cake := TV_Add("Cake Poker", options_sites)
+	;sites_micro := TV_Add("Microgaming", options_sites)
 	sites_pacific := TV_Add("Pacific Poker", options_sites)
-	options_reload := TV_Add("Reload", options)
-	options_autoload := TV_Add("Auto Load", options)
+	;options_reload := TV_Add("Reload", options)
+	;options_autoload := TV_Add("Auto Load", options)
 
 	rules := "a2 v1|w120"
 	ctrlCounts := "18"
@@ -323,16 +323,19 @@ Settings() {
 	Gui, Add, Edit, Hidden vmaxRandom w40, %maxRandom%
 	
 	rules .= ",b5 c2__l20 p5 w130|l5 p5 w130"
-	ctrlCounts .= ",10"
+	ctrlCounts .= ",4"
 	Gui, Add, Text, Hidden, Enable PokerPad for these sites:
+	/*
 	IniRead, load, PokerPad.ini, General, FullTilt, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vfulltilt, Full Tilt Poker
 	IniRead, load, PokerPad.ini, General, PokerStars, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vstars, Poker Stars
+	*/
 	IniRead, load, PokerPad.ini, General, iPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vipoker, iPoker
 	IniRead, load, PokerPad.ini, General, PartyPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vparty, Party Poker
+	/*
 	IniRead, load, PokerPad.ini, General, EverestPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% veverest, Everest Poker
 	IniRead, load, PokerPad.ini, General, OnGame, 1
@@ -341,10 +344,12 @@ Settings() {
 	Gui, Add, CheckBox, Hidden Checked%load% vcake, Cake Poker
 	IniRead, load, PokerPad.ini, General, Microgaming, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vmicro, Microgaming
+	*/
 	IniRead, load, PokerPad.ini, General, Pacific, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vpacific, Pacific Poker
-
+	
 	rules .= ",a2 v1|w200"
+/*
 	ctrlCounts .= ",2"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_fulltilt, % GetPath("FullTilt")
@@ -358,7 +363,7 @@ Settings() {
 	IniRead, theme, PokerPad.ini, PokerStars, Theme, %A_Space%
 	r := ListIndexOf(themes, theme, "|") + 1
 	Gui, Add, DropDownList, Hidden vtheme_stars Choose%r%, % themes
-	
+*/
 	rules .= ","
 	ctrlCounts .= ",4"
 	Gui, Add, Text, Hidden, Path:
@@ -378,7 +383,7 @@ Settings() {
 	decimal := PartyPoker_Decimal ? PartyPoker_Decimal : "."
 	Gui, Add, Edit, Hidden vformat_party, %PartyPoker_Currency%1%PartyPoker_Separator%000%decimal%00
 
-
+/*
 	rules .= ","
 	ctrlCounts .= ",4"
 	Gui, Add, Text, Hidden, Path:
@@ -417,12 +422,13 @@ Settings() {
 	IniRead, theme, PokerPad.ini, Microgaming, Theme, %A_Space%
 	r := ListIndexOf(themes, theme, "|") + 1
 	Gui, Add, DropDownList, Hidden vtheme_micro Choose%r%, % themes
-
+*/
 	rules .= ","
 	ctrlCounts .= ",2"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	
+	/*
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
 	ctrlCounts .= ",6"
 	IniRead, muck, PokerPad.ini, Reload, AutoMuck, 1
@@ -434,6 +440,7 @@ Settings() {
 	IniRead, blinds, PokerPad.ini, Reload, BigBlinds, 100
 	Gui, Add, UpDown, Hidden vblinds Range1-100, % blinds
 	Gui, Add, Text, Hidden, `% maximum buy-in.
+	
 
 	rules .= ",a1 t5|n0 c2|a1 t5_r2 h190|c2 p2 v2|r2 h190_c2 p2 v0"
 	ctrlCounts .= ",6"
@@ -458,7 +465,7 @@ Settings() {
 	Gui, Add, Button, Hidden gSettings_Remove, >
 	Gui, Add, ListBox, Hidden r10 AltSubmit, %available%
 	Gui, Add, Button, Hidden gSettings_Add, <
-
+*/
 	
 
 	
@@ -694,15 +701,15 @@ Settings() {
 				selected := 5
 			else if (A_EventInfo == fixed)
 				selected := 6
-			/* else if (A_EventInfo == street)
-				selected := 7 
-			*/
+			;else if (A_EventInfo == street)
+			;	selected := 7 
 			else if (A_EventInfo == options)
 				selected := 7
 			else if (A_EventInfo == options_betting)
 				selected := 8
 			else if (A_EventInfo == options_sites)
 				selected := 9
+			/* 
 			else if (A_EventInfo == options_reload)
 				selected := 19
 			else if (A_EventInfo == options_autoload)
@@ -711,10 +718,12 @@ Settings() {
 				selected := 10
 			else if (A_EventInfo == sites_stars)
 				selected := 11
+			*/
 			else if (A_EventInfo == sites_ipoker)
-				selected := 12
+				selected := 10
 			else if (A_EventInfo == sites_party)
-				selected := 13
+				selected := 11
+			/* 
 			else if (A_EventInfo == sites_everest)
 				selected := 14
 			else if (A_EventInfo == sites_ongame)
@@ -723,8 +732,9 @@ Settings() {
 				selected := 16
 			else if (A_EventInfo == sites_micro)
 				selected := 17
+			*/
 			else if (A_EventInfo == sites_pacific)
-				selected := 18
+				selected := 12
 			Settings_SetVisibility(ctrls, ctrlCounts, selected, "Show")
 		}
 		return
