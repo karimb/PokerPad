@@ -82,7 +82,9 @@ Settings() {
 	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific
 	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific
 	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific
-	static theme_stars, theme_ipoker, theme_cake, theme_micro
+	static theme_stars, theme_cake, theme_micro
+	static preflop_ipoker, postflop_ipoker
+	static timebank_pacific
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
 	static muck, max, blinds
@@ -112,7 +114,7 @@ Settings() {
 	;sites_ongame := TV_Add("Ongame", options_sites)
 	;sites_cake := TV_Add("Cake Poker", options_sites)
 	;sites_micro := TV_Add("Microgaming", options_sites)
-	sites_pacific := TV_Add("Pacific Poker", options_sites)
+	sites_pacific := TV_Add("888/Pacific Poker", options_sites)
 	;options_reload := TV_Add("Reload", options)
 	;options_autoload := TV_Add("Auto Load", options)
 
@@ -365,14 +367,18 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vtheme_stars Choose%r%, % themes
 */
 	rules .= ","
-	ctrlCounts .= ",4"
+	ctrlCounts .= ",6"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_ipoker, % GetPath("IPoker")
-	Gui, Add, Text, Hidden, Theme:
-	IniRead, themes, PokerPad.ini, IPoker, Themes, %A_Space%
-	IniRead, theme, PokerPad.ini, IPoker, Theme, %A_Space%
-	r := ListIndexOf(themes, theme, "|") + 1
-	Gui, Add, DropDownList, Hidden vtheme_ipoker Choose%r%, % themes
+	Gui, Add, Text, Hidden, Pot Button Preflop:
+	IniRead, preflop_ipoker, PokerPad.ini, IPoker, Preflop, Button 3
+	r := SubStr(preflop_ipoker, 8, 1)
+	Gui, Add, DropDownList, Hidden vpreflop_ipoker Choose%r%, Button 1|Button 2|Button 3
+	Gui, Add, Text, Hidden, Pot Button Postflop:
+	IniRead, postflop_ipoker, PokerPad.ini, IPoker, Postflop, Button 3
+	r := SubStr(postflop_ipoker, 8, 1)
+	Gui, Add, DropDownList, Hidden vpostflop_ipoker Choose%r%, Button 1|Button 2|Button 3
+
 
 	rules .= ","
 	ctrlCounts .= ",4"
@@ -424,9 +430,11 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vtheme_micro Choose%r%, % themes
 */
 	rules .= ","
-	ctrlCounts .= ",2"
+	ctrlCounts .= ",3"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
+	IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
+	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank
 	
 	/*
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
@@ -647,9 +655,14 @@ Settings() {
 		IniWrite, %path_pacific%, Pokerpad.ini, Pacific, Path
 		
 		IniWrite, %theme_stars%, PokerPad.ini, PokerStars, Theme
-		IniWrite, %theme_ipoker%, PokerPad.ini, IPoker, Theme
+		;IniWrite, %theme_ipoker%, PokerPad.ini, IPoker, Theme
 		IniWrite, %theme_cake%, PokerPad.ini, CakePoker, Theme
 		IniWrite, %theme_micro%, PokerPad.ini, Microgaming, Theme
+		
+		IniWrite, %preflop_ipoker%, PokerPad.ini, Ipoker, Preflop
+		IniWrite, %postflop_ipoker%, PokerPad.ini, Ipoker, Postflop
+		
+		IniWrite, %timebank_pacific%, PokerPad.ini, Pacific, Timebank
 
 		SetCurrencyFormat(format_ongame, "Ongame")
 		SetCurrencyFormat(format_party, "PartyPoker")

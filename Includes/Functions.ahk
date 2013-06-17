@@ -363,6 +363,7 @@ CreateIni() {
 		Path=\PokerRoom.com\StartPokerRoom.exe
 		[Pacific]
 		Path=\PacificPoker\bin\888poker.exe
+		Timebank=1
 		[CakePoker]
 		Path=\Cake Poker\cake.exe
 		Themes=CakePoker
@@ -414,8 +415,8 @@ CreateIni() {
 		BoxColor=0xE7D4CE,8
 		[IPoker]
 		Path=\Titan Poker\casino.exe
-		Themes=Titan|CDPoker
-		Theme=Titan
+		Preflop=Button 3
+		Postflop=Button 3
 		[Titan]
 		PotColor=0xFFFFFF,16
 		ActionColor=0xFFFFFF,16
@@ -469,7 +470,7 @@ CreateIni() {
 		Relative7=NumpadHome
 		Relative8=NumpadUp
 		Relative9=NumpadPgUp
-		Rtick=1
+		Rtick=0
 		Fixed1=^Numpad2
 		Fixed2=^Numpad3
 		Fixed3=^Numpad4

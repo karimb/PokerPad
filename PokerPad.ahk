@@ -237,6 +237,9 @@ SetHotkeys() {
 	Hotkey, IfWinActive, ahk_group GameWindows
 	local hotkey, names
 	IniRead, hotkey, PokerPad.ini, Hotkeys, TypeBet, 0
+	IniRead, rtick, PokerPad.ini, Hotkeys, Rtick, 0
+	IniRead, ftick, PokerPad.ini, Hotkeys, Ftick, 1
+	IniRead, timebank_pacific, PokerPad.ini, Hotkeys, Timebank, 1
 	if hotkey {
 		Hotkey, Numpad0, NumpadDigit
 		Hotkey, Numpad1, NumpadDigit
@@ -1778,7 +1781,7 @@ IPoker_GetPot(factor) {
 
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
-	Sleep, 200
+	Sleep, 400
 	;select and copy
 	IPoker_AdjustClick(715, 512)
 	Send, {Home}+{End}^c
@@ -1841,7 +1844,7 @@ local box, pot, round := IPoker_GetRound(Rounding, Rounding)
 ;		Sleep, 600
 
 
-		if (GetHotKey("Rtick") && Ipoker_CheckBet(bet))
+		if (rtick && Ipoker_CheckBet(bet))
 		{
 			IPoker_ClickButton("Raise")
 		}
@@ -1857,7 +1860,7 @@ IPoker_FixedBet(factor) {
 	if IPoker_ChatMaximized() {
 		pot := GetAmount(GetDollarRound(factor * IPoker_GetBlind(true)), IPoker_Decimal)
 		IPoker_Bet(IPoker_BetBox, pot)
-		if (GetHotKey("Ftick") && Ipoker_CheckBet(pot))
+		if (ftick && Ipoker_CheckBet(pot))
 		{
 			IPoker_ClickButton("Raise")
 		}
@@ -2122,6 +2125,10 @@ PartyPoker_BetRelativePot(factor) {
 		raise := 0
 	;MsgBox pot %pot% call %call% raise %raise%
 	ControlSetText, % PartyPoker_BetAmount, % GetAmount(GetRoundedAmount(GetBet(factor, pot, call, raise, PartyPoker_GetBlind(true)), PartyPoker_GetRound(Rounding, Rounding)), PartyPoker_Decimal)
+	if (rtick) {
+		Sleep, 400
+		ClickControl(PartyPoker_Raise)
+	}
 }
 	
 PartyPoker_FixedBet(factor) {
@@ -2133,8 +2140,10 @@ PartyPoker_FixedBet(factor) {
 	z := GetAmount(GetDollarRound(factor * PartyPoker_GetBlind(true)), PartyPoker_Decimal)
 	if (z >= y) {
 		ControlSetText, % PartyPoker_BetAmount, % z
-		Sleep, 400
-		ClickControl(PartyPoker_Raise)
+		if (ftick) {
+			Sleep, 400
+			ClickControl(PartyPoker_Raise)
+		}
 	}
 }
 
@@ -3872,7 +3881,7 @@ Pacific_GetPot(factor) {
 	
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
-	Sleep, 200
+	Sleep, 400
 	;select and copy
 	Pacific_AdjustClick(722, 537)
 	Send, {Home}+{End}^c
@@ -3907,7 +3916,7 @@ Pacific_BetRelativePot(factor) {
 	local box, pot, round := Pacific_GetRound(Rounding, Rounding)
 	bet := GetRoundedAmount(Pacific_GetPot(factor), round)
 	Bet(bet)
-	if (GetHotKey("Rtick") && Pacific_CheckBet(bet)) {
+	if (rtick && Pacific_CheckBet(bet)) {
 		Pacific_ClickButton("Raise")
 	}
 }
@@ -3916,7 +3925,7 @@ Pacific_FixedBet(factor) {
 	local pot
 	pot := GetAmount(GetDollarRound(factor * Pacific_GetBlind(true)), Pacific_Decimal)
 	Pacific_Bet(Pacific_BetBox, pot)
-	if (GetHotKey("Ftick") && Pacific_CheckBet(pot)) {
+	if (ftick && Pacific_CheckBet(pot)) {
 		Pacific_ClickButton("Raise")
 	}
 }
