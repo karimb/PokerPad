@@ -1,6 +1,12 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.32 (21-07-2013)
+- GUI cleanup almost complete (iPoker and 888 still needs some finishing)
+- iPoker: Started support for configurable pot button
+- Party: Added support for PlayMoney
+- 888: support complete: many reliability improvement
+
 v0.1.31 (08-06-2013)
 - PokerPad Project transfered to karimb (bl1 is still a contributor)
 - Initial 888 support added
