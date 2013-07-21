@@ -9,7 +9,7 @@
 SysGet, Caption, 4
 SysGet, Border, 45
 SysGet, ResizeBorder, 32
-
+SysGet, ResizeBorderY, 33
  
  
  

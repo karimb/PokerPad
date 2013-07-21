@@ -623,9 +623,9 @@ GetPot(ByRef pot, call, raise, blind) {
 
 Bet(ByRef bet) {
 	BlockInput, On
-	Send, {Home}+{End}{Backspace}
+	SendInput, {Home}+{End}{Backspace}
 	if bet
-		Send, %bet%
+		SendInput, %bet%
 	BlockInput, Off
 }
 
@@ -3861,8 +3861,8 @@ Pacific() {
 	Pacific_IncreaseBet = 700 535 5 5
 	Pacific_DecreaseBet = 495 535 5 5
 	
-	Pacific_Pot = 661 511 45 5
-	Pacific_BetBox = 720 532 55 12
+	Pacific_Pot = 665 511 35 5
+	Pacific_BetBox = 730 535 45 5
 	
 	Pacific_GameWindow = / ahk_class #32770
 	Pacific_LobbyWindow = Lobby ahk_class #32770
@@ -3883,23 +3883,15 @@ Pacific_GetPot(factor) {
 	ClickWindowRect(x, y, w, h)
 	Sleep, 400
 	;select and copy
-	Pacific_AdjustClick(722, 537)
-	Send, {Home}+{End}^c
+	Pacific_AdjustClick(740, 537)
+	SendInput, {Home}+{End}^c
 	pot := Clipboard
-/*	local title
-	WinGetTitle, title
-	FileAppend
-	(
-	%title% - %A_Hour%:%A_Min%:%A_Sec% - %pot%
-	
-	),log.txt
-*/
 	return (factor * pot)
 }
 	
 Pacific_CheckBet(bet) {
-	Pacific_AdjustClick(722, 537)
-	Send, {Home}+{End}^c
+	Pacific_AdjustClick(740, 537)
+	SendInput, {Home}+{End}^c
 	if (Clipboard == bet)
 		return 1
 	else
@@ -3907,16 +3899,18 @@ Pacific_CheckBet(bet) {
 }
 	
 Pacific_Bet(ByRef betbox, bet = "") {
-	Pacific_AdjustClick(722, 537)
-	Send, {Home}+{End}
+	Pacific_AdjustClick(740, 537)
+	SendInput, {Home}+{End}
 	Bet(bet)
 }
 
 Pacific_BetRelativePot(factor) {
 	local box, pot, round := Pacific_GetRound(Rounding, Rounding)
 	bet := GetRoundedAmount(Pacific_GetPot(factor), round)
+	local c:= Pacific_CheckBet(bet)
+	local o := bet/factor
 	Bet(bet)
-	if (rtick && Pacific_CheckBet(bet)) {
+	if (rtick && c) {
 		Pacific_ClickButton("Raise")
 	}
 }
@@ -3925,7 +3919,8 @@ Pacific_FixedBet(factor) {
 	local pot
 	pot := GetAmount(GetDollarRound(factor * Pacific_GetBlind(true)), Pacific_Decimal)
 	Pacific_Bet(Pacific_BetBox, pot)
-	if (ftick && Pacific_CheckBet(pot)) {
+	local c := Pacific_CheckBet(pot)
+	if (ftick && c) {
 		Pacific_ClickButton("Raise")
 	}
 }
@@ -3981,12 +3976,17 @@ Pacific_AdjustSize(box, id = "") {
 		WinGetPos, , , w, h, ahk_id %id%
 	else
 		WinGetPos, , , w, h
-		
-	w /= 800.0
-	h /= 579.0
+	w -= 2 * ResizeBorder	
+	w /= (800.0 - 2 * ResizeBorder)
+	h -= (2 * ResizeBorderY + Caption)
+	h /= (579.0 - 2 * ResizeBorderY - Caption)
 	StringSplit, box, box, %A_Space%
+	box1 -= ResizeBorder
 	box1 *= w
+	box1 += ResizeBorder
+	box2 -= (ResizeBorderY + Caption)
 	box2 *= h
+	box2 += (ResizeBorderY + Caption)
 	box3 *= w
 	box4 *= h
 	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
@@ -3999,10 +3999,16 @@ Pacific_AdjustSize(box, id = "") {
 Pacific_AdjustClick(x, y, c = 1) {
 	local px,py,w, h
 	WinGetPos, , , w, h
-	w /= 800.0
-	h /= 579.0
+	w -= 2 * ResizeBorder	
+	w /= (800.0 - 2 * ResizeBorder)
+	h -= (2 * ResizeBorderY + Caption)
+	h /= (579.0 - 2 * ResizeBorderY - Caption)
+	x -= ResizeBorder
 	x := Round(x * w)
+	x += ResizeBorder
+	y -= (ResizeBorderY + Caption)
 	y := Round(y * h)
+	y += (ResizeBorderY + Caption)
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
@@ -4104,7 +4110,7 @@ Pacific_Fixed9:
 	Pacific_FixedBet(Fixed9)
 	return
 Pacific_AllIn:
-	Send, {F8}
+	SendInput, {F8}
 	return
 Pacific_LastHand:
 	ClickWindowArea2(Pacific_LastHand)
