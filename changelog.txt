@@ -1,6 +1,10 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.33 (23-08-2013)
+- 888: Significant Windows compatibility improvement. Should work with all windows versions from Windows 2000.
+- 888: Timebank can now be turned on/off
+
 v0.1.32 (21-07-2013)
 - GUI cleanup almost complete (iPoker and 888 still needs some finishing)
 - iPoker: Started support for configurable pot button

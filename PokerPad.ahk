@@ -1786,6 +1786,7 @@ IPoker_GetPot(factor) {
 	;select and copy
 	IPoker_AdjustClick(715, 512)
 	Send, {Home}+{End}^c
+	Sleep, 50
 	pot := Clipboard
 	return (factor * pot)
 }
@@ -3874,7 +3875,8 @@ Pacific() {
 	;Site#32770 = Pacific
 	SetClientHotkeys("Pacific")
 	GroupAdd, GameWindows, / ahk_class #32770
-	SetTimer Pacific_AutoTimeBank, 4000
+	if (timebank_pacific)
+		SetTimer Pacific_AutoTimeBank, 4000
 }
 
 Pacific_GetPot(factor) {

@@ -434,7 +434,7 @@ Settings() {
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
-	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank
+	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank`n(Restart required)
 	
 	/*
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
