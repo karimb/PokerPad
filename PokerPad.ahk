@@ -624,6 +624,7 @@ GetPot(ByRef pot, call, raise, blind) {
 Bet(ByRef bet) {
 	BlockInput, On
 	SendInput, {Home}+{End}{Backspace}
+	Sleep, 50
 	if bet
 		SendInput, %bet%
 	BlockInput, Off
@@ -1703,7 +1704,7 @@ IPoker_AdjustSize(box) {
 	box4 *= h
 	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
 }
-;%
+
 
 /* AdjustClick clicks to the area of the screen indicated by x and y
    with mouse button c (c=0 moves without click) 
@@ -1809,6 +1810,7 @@ IPoker_GetPot(factor) {
 Ipoker_CheckBet(bet) {
 	IPoker_AdjustClick(715, 512)
 	Send, {Home}+{End}^c
+	Sleep, 50
 	if (Clipboard == bet)
 		return 1
 	else
@@ -1818,7 +1820,7 @@ Ipoker_CheckBet(bet) {
 
 IPoker_Bet(ByRef betbox, bet = "") {
 	IPoker_AdjustClick(715, 512)
-	Send, {Home}+{End}
+	;Send, {Home}+{End}
 	;SendInput %bet%
 	Bet(bet)
 
@@ -3833,37 +3835,38 @@ Microgaming_SitOut:
 
 
 
-;%
 ; ( [] )..( [] )   Pacific Implementation   ( [] )..( [] ) 
 
 #Include Includes\Pacific.ahk
 
 Pacific() {
 	global
-	; All boxes assumes a window dimension of 800x579
-	Pacific_Fold = 335 475 135 12
-	Pacific_CheckFold = 335 510 135 10
-	Pacific_Call = 490 475 135 12
-	Pacific_Raise = 645 475 135 12
-	Pacific_FoldAny = 643 559 5 5
-	
-	Pacific_AutoPost = 486 558 5 5
-	Pacific_SitOut = 332 558 5 5
-	
+	; All boxes assumes a window dimension of 800x578. The theme must be Win2000
+	;all values must be reduced by 4 pixels in x and 23 in y. 
+	;For example, 600 300 10 5 becomes 596 277 10 5
+	Pacific_Fold = 331 452 135 12
+	Pacific_CheckFold = 331 487 135 10
+	Pacific_Call = 486 452 135 12
+	Pacific_Raise = 641 452 135 12
+	Pacific_FoldAny = 635 536 5 5
+
+	Pacific_AutoPost = 482 535 5 5
+	Pacific_SitOut = 328 535 5 5
+
 	Pacific_AutoMuck = 
-	Pacific_Lobby = 662 58 120 12
+	Pacific_Lobby = 658 35 120 12
 	;Pacific_LastHand = 
 	;Pacific_Options =
 	;Pacific_Settings
-	Pacific_TimeBank = 680 430 105 10
-	Pacific_Chat = 16 551 155 12
-	
-	Pacific_IncreaseBet = 700 535 5 5
-	Pacific_DecreaseBet = 495 535 5 5
-	
-	Pacific_Pot = 665 511 35 5
-	Pacific_BetBox = 730 535 45 5
-	
+	Pacific_TimeBank = 676 407 105 10
+	Pacific_Chat = 12 538 155 12
+
+	Pacific_IncreaseBet = 696 512 5 5
+	Pacific_DecreaseBet = 491 512 5 5
+
+	Pacific_Pot = 661 488 35 5
+	Pacific_BetBox = 726 512 45 5
+
 	Pacific_GameWindow = / ahk_class #32770
 	Pacific_LobbyWindow = Lobby ahk_class #32770
 	Pacific_LastHandWindow = ^Instant Replay ahk_class DxWndClass
@@ -3877,21 +3880,20 @@ Pacific() {
 Pacific_GetPot(factor) {
 	local x, y, w, h, device, context, pixels, box, pot, pot2
 
-	box := Pacific_AdjustSize(Pacific_Pot)
-	
-	GetWindowArea(x, y, w, h, box, false)
-	ClickWindowRect(x, y, w, h)
+	Pacific_ClickButton("Pot")
 	Sleep, 400
 	;select and copy
-	Pacific_AdjustClick(740, 537)
+	Pacific_AdjustClick(736, 514)
 	SendInput, {Home}+{End}^c
+	Sleep, 50
 	pot := Clipboard
 	return (factor * pot)
 }
 	
 Pacific_CheckBet(bet) {
-	Pacific_AdjustClick(740, 537)
+	Pacific_AdjustClick(736, 514)
 	SendInput, {Home}+{End}^c
+	Sleep, 50
 	if (Clipboard == bet)
 		return 1
 	else
@@ -3899,17 +3901,15 @@ Pacific_CheckBet(bet) {
 }
 	
 Pacific_Bet(ByRef betbox, bet = "") {
-	Pacific_AdjustClick(740, 537)
-	SendInput, {Home}+{End}
+	Pacific_AdjustClick(736, 514)
 	Bet(bet)
 }
 
 Pacific_BetRelativePot(factor) {
 	local box, pot, round := Pacific_GetRound(Rounding, Rounding)
 	bet := GetRoundedAmount(Pacific_GetPot(factor), round)
+	Pacific_Bet(Pacific_BetBox, bet)
 	local c:= Pacific_CheckBet(bet)
-	local o := bet/factor
-	Bet(bet)
 	if (rtick && c) {
 		Pacific_ClickButton("Raise")
 	}
@@ -3977,14 +3977,12 @@ Pacific_AdjustSize(box, id = "") {
 	else
 		WinGetPos, , , w, h
 	w -= 2 * ResizeBorder	
-	w /= (800.0 - 2 * ResizeBorder)
+	w /= 792.0
 	h -= (2 * ResizeBorderY + Caption)
-	h /= (579.0 - 2 * ResizeBorderY - Caption)
+	h /= 551.0
 	StringSplit, box, box, %A_Space%
-	box1 -= ResizeBorder
 	box1 *= w
 	box1 += ResizeBorder
-	box2 -= (ResizeBorderY + Caption)
 	box2 *= h
 	box2 += (ResizeBorderY + Caption)
 	box3 *= w
@@ -4000,13 +3998,11 @@ Pacific_AdjustClick(x, y, c = 1) {
 	local px,py,w, h
 	WinGetPos, , , w, h
 	w -= 2 * ResizeBorder	
-	w /= (800.0 - 2 * ResizeBorder)
+	w /= 792.0
 	h -= (2 * ResizeBorderY + Caption)
-	h /= (579.0 - 2 * ResizeBorderY - Caption)
-	x -= ResizeBorder
+	h /= 551.0
 	x := Round(x * w)
 	x += ResizeBorder
-	y -= (ResizeBorderY + Caption)
 	y := Round(y * h)
 	y += (ResizeBorderY + Caption)
 	MouseGetPos, px, py
