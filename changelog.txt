@@ -1,9 +1,15 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.35
+- Moved most of the code in PokerPad.ahk into the relevant Include files
+
+v0.1.34 (24-08-2013)
+- Fixed the error sometimes occuring when PokerPad scans windows: Site%class% is an invalid variable
+
 v0.1.33 (23-08-2013)
 - 888: Significant Windows compatibility improvement. Should work with all windows versions from Windows 2000.
-- 888: Timebank can now be turned on/off
+- 888: Timebank can now be turned on/off (requires a restart of PokerPad)
 
 v0.1.32 (21-07-2013)
 - GUI cleanup almost complete (iPoker and 888 still needs some finishing)
