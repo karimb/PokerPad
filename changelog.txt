@@ -1,7 +1,7 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
-v0.1.35
+v0.1.35 (28-08-2013)
 - Moved most of the code in PokerPad.ahk into the relevant Include files
 - Change SendInput method back to Send due to occasional keyboard locks
 - iPoker: Changes to adjust to various Windows version and theme
