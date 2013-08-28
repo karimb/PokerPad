@@ -78,7 +78,7 @@ Pacific_GetPot(factor) {
 	Sleep, 400
 	;select and copy
 	Pacific_AdjustClick(736, 514)
-	SendInput, {Home}+{End}^c
+	Send, {Home}+{End}^c
 	Sleep, 50
 	pot := Clipboard
 	return (factor * pot)
@@ -86,7 +86,7 @@ Pacific_GetPot(factor) {
 	
 Pacific_CheckBet(bet) {
 	Pacific_AdjustClick(736, 514)
-	SendInput, {Home}+{End}^c
+	Send, {Home}+{End}^c
 	Sleep, 50
 	if (Clipboard == bet)
 		return 1
@@ -300,7 +300,7 @@ Pacific_Fixed9:
 	Pacific_FixedBet(Fixed9)
 	return
 Pacific_AllIn:
-	SendInput, {F8}
+	Send, {F8}
 	return
 Pacific_LastHand:
 	ClickWindowArea2(Pacific_LastHand)

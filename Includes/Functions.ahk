@@ -415,8 +415,7 @@ CreateIni() {
 		BoxColor=0xE7D4CE,8
 		[IPoker]
 		Path=\Titan Poker\casino.exe
-		Preflop=Button 3
-		Postflop=Button 3
+		PotButton=Button 3
 		[Titan]
 		PotColor=0xFFFFFF,16
 		ActionColor=0xFFFFFF,16

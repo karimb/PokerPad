@@ -3,6 +3,10 @@ PokerPad for Party Poker, iPoker and 888
 
 v0.1.35
 - Moved most of the code in PokerPad.ahk into the relevant Include files
+- Change SendInput method back to Send due to occasional keyboard locks
+- iPoker: Changes to adjust to various Windows version and theme
+- iPoker: implementation of all-in shortcuts
+- iPoker: configurable pot button now supported through the iPoker settings 
 
 v0.1.34 (24-08-2013)
 - Fixed the error sometimes occuring when PokerPad scans windows: Site%class% is an invalid variable

@@ -239,6 +239,7 @@ SetHotkeys() {
 	IniRead, hotkey, PokerPad.ini, Hotkeys, TypeBet, 0
 	IniRead, rtick, PokerPad.ini, Hotkeys, Rtick, 0
 	IniRead, ftick, PokerPad.ini, Hotkeys, Ftick, 1
+	IniRead, pot_ipoker, PokerPad.ini, iPoker, PotButton, Button 3
 	IniRead, timebank_pacific, PokerPad.ini, Hotkeys, Timebank, 1
 	if hotkey {
 		Hotkey, Numpad0, NumpadDigit
@@ -622,10 +623,10 @@ GetPot(ByRef pot, call, raise, blind) {
 
 Bet(ByRef bet) {
 	BlockInput, On
-	SendInput, {Home}+{End}{Backspace}
+	Send, {Home}+{End}{Backspace}
 	Sleep, 50
 	if bet
-		SendInput, %bet%
+		Send, %bet%
 	BlockInput, Off
 }
 

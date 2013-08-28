@@ -55,11 +55,18 @@ return CurrencyToFloat(blind)
 ; MsgBox blind: %blind%
 }
 
+/* 
+ * All boxes assume a window dimension of 798x600. The Windows theme MUST be Win2000
+ * so change the the theme in WinXP/Win7 to Win2000 before proceeding
+ * all values must be reduced by 4 pixels in x and 4 in y (border width/height in Win2000)
+ * For example, 600 300 10 5 becomes 596 296 10 5
+ * The functions AdjustClick and AdjustSize then make adjustments for different window sizes and borders
+ */
 
-IPoker() {
-
-
+ 
+ IPoker() {
 	local theme
+	
 	IniRead, theme, PokerPad.ini, IPoker, Theme, A_Space
 	if (theme = "")
 		return false
@@ -73,27 +80,26 @@ IPoker() {
 		return false
 	
 	; These dimensions only work for a window which is 798x600 in size
-    IPoker_Fold = 442 536 80 10
-	IPoker_CheckFold = 442 560 80 10
-	IPoker_Call = 555 535 60 24
-	IPoker_Raise = 665 530 60 24
-	IPoker_FastFold = 332 535 10 24
+    IPoker_Fold = 432 525 80 10
+	IPoker_CheckFold = 432 550 80 10
+	IPoker_Call = 551 531 60 24
+	IPoker_Raise = 661 526 60 24
+	IPoker_FastFold = 328 531 10 24
 
-	IPoker_AutoPost = 720 590 70 10
-	IPoker_FoldAny = 589 586 70 10
-	IPoker_SitOut = 525 585 50 10
+	IPoker_AutoPost = 720 590 5 5
+	IPoker_FoldAny = 444 574 5 5
+	IPoker_SitOut = 629 574 5 5
 
 	IPoker_AutoMuck = 634 545 70 12
 	IPoker_AllIn = 710 480 100 24
-	IPoker_LastHand = 235 485 70 9
+	IPoker_LastHand = 228 482 50 9
 
-	IPoker_Pot = 378 80 60 22
-	IPoker_BetBox = 715 512 40 6
+	IPoker_Pot = 374 76 60 22
+	IPoker_BetBox = 711 508 40 6
 	
-	IPoker_PotButton = 660 483 30 7
-	; the pot button has different coords for NL and PL
-	IPoker_PotButton_NL = 660 483 20 7
-	IPoker_PotButton_PL = 700 483 60 7
+	IPoker_PotButton1 = 435 475 80 7
+	IPoker_PotButton2 = 548 475 80 7
+	IPoker_PotButton3 = 660 475 80 7
 	
 	IPoker_ChatBox := CreateArea("16,534,360,60", 780, 557)
 	
@@ -109,11 +115,15 @@ IPoker() {
 IPoker_AdjustSize(box) {
 	local box0, box1, box2, box3, box4, w, h
 	WinGetPos, , , w, h
-	w /= 800.0
-	h /= 600.0
+	w -= 2 * ResizeBorder	
+	w /= 790.0
+	h -= 2 * ResizeBorderY
+	h /= 592.0
 	StringSplit, box, box, %A_Space%
 	box1 *= w
+	box1 += ResizeBorder
 	box2 *= h
+	box2 += ResizeBorderY
 	box3 *= w
 	box4 *= h
 	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
@@ -126,11 +136,14 @@ IPoker_AdjustSize(box) {
 IPoker_AdjustClick(x, y, c = 1) {
 	local px,py,w, h
 	WinGetPos, , , w, h
-	w /= 800.0
-	h /= 600.0
+	w -= 2 * ResizeBorder	
+	w /= 790.0
+	h -= 2 * ResizeBorderY
+	h /= 592.0
 	x := Round(x * w)
+	x += ResizeBorder
 	y := Round(y * h)
-	;ControlClick, x%x% y%y%, , , , %c% , NA Pos
+	y += ResizeBorderY
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
@@ -161,18 +174,12 @@ IPoker_ChatMaximized() {
 ; We use the window handle when several fold are done in a row to make sure 
 ;they reach only one window
 IPoker_ClickButton(button, id = "") {
-	local x, y, w, h, bgr, dx, dy, dy2, box
-
+	local x, y, w, h, bgr, box
 	button := IPoker_%button%
-	dx := 4
-	dy := 6
-	dy2 := 15
-
 	;MsgBox % "Before: " . button .  " After: " . IPoker_AdjustSize(button)
 	box := IPoker_AdjustSize(button)
 	GetWindowArea(x, y, w, h, box, false, id)
-
-;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
+	;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
 	if IPoker_ChatMaximized() {
 		ClickWindowRect(x, y, w, h, id)
 	}
@@ -181,49 +188,22 @@ IPoker_ClickButton(button, id = "") {
 }
 
 IPoker_GetPot(factor) {
-	local x, y, w, h, device, context, pixels, box, pot, IPoker_TableTitle
-	
-	; we check if the active table is pot-limit or no-limit,
-	; set the coords of the pot button accordingly
-	; and click it to get the pot size
-
-	WinGetTitle,IPoker_TableTitle,A
-
-	IfInString,IPoker_TableTitle,Pot limit
-		box := IPoker_AdjustSize(IPoker_PotButton_PL)
-	else
-		box := IPoker_AdjustSize(IPoker_PotButton_NL)
-
+	local x, y, w, h, device, context, pixels, box, pot, btn
+	btn := SubStr(pot_ipoker, 8, 1)
+	box := IPoker_AdjustSize(IPoker_PotButton%btn%)
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
 	Sleep, 400
 	;select and copy
-	IPoker_AdjustClick(715, 512)
+	IPoker_AdjustClick(711, 508)
 	Send, {Home}+{End}^c
 	Sleep, 50
 	pot := Clipboard
 	return (factor * pot)
 }
 
-
-/*IPoker_GetPot(factor) {
-	local x, y, w, h, device, context, pixels, box, pot
-	
-	;we click on the pot button to get the pot size
-	box := IPoker_AdjustSize(IPoker_PotButton)
-	GetWindowArea(x, y, w, h, box, false)
-	ClickWindowRect(x, y, w, h)
-	Sleep, 200
-	;select and copy
-	IPoker_AdjustClick(715, 512)
-	Send, {Home}+{End}^c
-	pot := Clipboard
-	return (factor * pot)
-}
-*/
-	
 Ipoker_CheckBet(bet) {
-	IPoker_AdjustClick(715, 512)
+	IPoker_AdjustClick(711, 508)
 	Send, {Home}+{End}^c
 	Sleep, 50
 	if (Clipboard == bet)
@@ -231,36 +211,18 @@ Ipoker_CheckBet(bet) {
 	else
 		return 0
 }
-	
 
 IPoker_Bet(ByRef betbox, bet = "") {
-	IPoker_AdjustClick(715, 512)
-	;Send, {Home}+{End}
-	;SendInput %bet%
+	IPoker_AdjustClick(711, 508)
 	Bet(bet)
-
 }
-	
-
 
 IPoker_BetRelativePot(factor) {
-
-local box, pot, round := IPoker_GetRound(Rounding, Rounding)
-
-;mypot1 := GetRoundedAmount(IPoker_GetPot(factor), round)
-;mypot2 := IPoker_GetPot(factor)
-;MsgBox, roundpot: %mypot1%, rawpot: %mypot2%, pot: %pot%
-
+	local box, pot, round := IPoker_GetRound(Rounding, Rounding)
 	if IPoker_ChatMaximized() {
-		;MsgBox % IPoker_GetPot(factor)
 		bet := GetRoundedAmount(IPoker_GetPot(factor), round)
-		;box := IPoker_AdjustSize(IPoker_BetBox)
-		;IPoker_Bet(box, bet)
-		Bet(bet)
-;   	Click 720 515 2
-;		Sleep, 600
-
-
+		if (factor != 1)
+			IPoker_Bet(box, bet)
 		if (rtick && Ipoker_CheckBet(bet))
 		{
 			IPoker_ClickButton("Raise")
@@ -270,14 +232,12 @@ local box, pot, round := IPoker_GetRound(Rounding, Rounding)
 		MsgBox PokerPad will not work if the chat window is not maximized.
 }
 
-
-
 IPoker_FixedBet(factor) {
-	local pot
+	local pot, box
 	if IPoker_ChatMaximized() {
 		pot := GetAmount(GetDollarRound(factor * IPoker_GetBlind(true)), IPoker_Decimal)
-		IPoker_Bet(IPoker_BetBox, pot)
-		if (ftick && Ipoker_CheckBet(pot))
+		IPoker_Bet(box, pot)
+		if (ftick && Ipoker_CheckBet(pot) && factor < 200)
 		{
 			IPoker_ClickButton("Raise")
 		}
@@ -285,7 +245,6 @@ IPoker_FixedBet(factor) {
 	else
 		MsgBox PokerPad will not work if the chat window is not maximized.
 }
-
 
 IPoker_CloseGameWindows(title) {
 	local windows, id
@@ -323,7 +282,6 @@ IPoker_CheckAll(ByRef checkbox, checked) {
 		}
 	}
 }
-
 
 IPoker_GetRound(rounding, default) {
 	if (rounding < -1) 
@@ -410,19 +368,19 @@ IPoker_RandomBet:
 	IPoker_BetRelativePot(GetRandomBet())
 	return
 IPoker_AllIn:
-	ClickWindowArea(IPoker_IsMiniWindow() ? IPoker_MiniAllIn : IPoker_AllIn, false)
+	IPoker_Bet(IPoker_BetBox, 100000)
 	return
 IPoker_LastHand:
-	ClickWindowArea(IPoker_IsMiniWindow() ? IPoker_MiniLastHand : IPoker_LastHand, false)
+	IPoker_ClickButton("LastHand")
 	return
 IPoker_IncreaseBet:
 IPoker_IncreaseBet2:
-	IPoker_AdjustClick(440,510)
+	IPoker_AdjustClick(436,506)
 	Send, {Right}
 	return
 IPoker_DecreaseBet:
 IPoker_DecreaseBet2:
-	IPoker_AdjustClick(440,510)
+	IPoker_AdjustClick(436,506)
 	Send, {Left}
 	return
 IPoker_FoldAny:
@@ -435,7 +393,8 @@ IPoker_ToggleAutoMuck:
 	ClickWindowArea(IPoker_AutoMuck, false)
 	return
 IPoker_AllInThisHand:
-	TrayTip, Not Supported!, All In*** is not supported for iPoker.
+	IPoker_Bet(IPoker_BetBox, 100000)
+	;TrayTip, Not Supported!, All In*** is not supported for iPoker.
 	return
 IPoker_Reload:
 	IPoker_Reload(InStr(A_ThisHotkey, "^") ? false : true)

@@ -83,7 +83,7 @@ Settings() {
 	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific
 	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific
 	static theme_stars, theme_cake, theme_micro
-	static preflop_ipoker, postflop_ipoker
+	static preflop_ipoker, postflop_ipoker, pot_ipoker
 	static timebank_pacific
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
@@ -367,17 +367,21 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vtheme_stars Choose%r%, % themes
 */
 	rules .= ","
-	ctrlCounts .= ",6"
+	ctrlCounts .= ",4"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_ipoker, % GetPath("IPoker")
-	Gui, Add, Text, Hidden, Pot Button Preflop:
-	IniRead, preflop_ipoker, PokerPad.ini, IPoker, Preflop, Button 3
-	r := SubStr(preflop_ipoker, 8, 1)
-	Gui, Add, DropDownList, Hidden vpreflop_ipoker Choose%r%, Button 1|Button 2|Button 3
-	Gui, Add, Text, Hidden, Pot Button Postflop:
-	IniRead, postflop_ipoker, PokerPad.ini, IPoker, Postflop, Button 3
-	r := SubStr(postflop_ipoker, 8, 1)
-	Gui, Add, DropDownList, Hidden vpostflop_ipoker Choose%r%, Button 1|Button 2|Button 3
+	Gui, Add, Text, Hidden, Pot Button:
+	IniRead, pot_ipoker, PokerPad.ini, IPoker, PotButton, Button 3
+	r := SubStr(pot_ipoker, 8, 1)
+	Gui, Add, DropDownList, Hidden vpot_ipoker Choose%r%, Button 1|Button 2|Button 3
+	;Gui, Add, Text, Hidden, Pot Button Preflop:
+	;IniRead, preflop_ipoker, PokerPad.ini, IPoker, Preflop, Button 3
+	;r := SubStr(preflop_ipoker, 8, 1)
+	;Gui, Add, DropDownList, Hidden vpreflop_ipoker Choose%r%, Button 1|Button 2|Button 3
+	;Gui, Add, Text, Hidden, Pot Button Postflop:
+	;IniRead, postflop_ipoker, PokerPad.ini, IPoker, Postflop, Button 3
+	;r := SubStr(postflop_ipoker, 8, 1)
+	;Gui, Add, DropDownList, Hidden vpostflop_ipoker Choose%r%, Button 1|Button 2|Button 3
 
 
 	rules .= ","
@@ -659,8 +663,9 @@ Settings() {
 		IniWrite, %theme_cake%, PokerPad.ini, CakePoker, Theme
 		IniWrite, %theme_micro%, PokerPad.ini, Microgaming, Theme
 		
-		IniWrite, %preflop_ipoker%, PokerPad.ini, Ipoker, Preflop
-		IniWrite, %postflop_ipoker%, PokerPad.ini, Ipoker, Postflop
+		IniWrite, %pot_ipoker%, PokerPad.ini, Ipoker, PotButton
+		;IniWrite, %preflop_ipoker%, PokerPad.ini, Ipoker, Preflop
+		;IniWrite, %postflop_ipoker%, PokerPad.ini, Ipoker, Postflop
 		
 		IniWrite, %timebank_pacific%, PokerPad.ini, Pacific, Timebank
 
