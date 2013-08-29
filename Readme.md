@@ -4,7 +4,7 @@
 PokerPad is a hotkey software for iPoker, 888 and Party Poker. It allows linking keyboard keys (or mouse/joypad buttons) to specific actions on the Poker client. For example, a user can link F2 to the action "bet 3/4 of the pot".  
 The current development is focused on cash games. Your mileage may vary with SNG and Tournaments.
 
-##Downloading PokerPad
+##Download
 Go to: https://github.com/karimb/PokerPad/tags  
 and download the zip file of the last version (at the top on github) then unzip the file anywhere on your hard drive.
 
