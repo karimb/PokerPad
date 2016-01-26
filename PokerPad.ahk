@@ -374,6 +374,7 @@ InvokeHotkey(action) {
 	; Is the content of %class% can be used as a variable name?  #_@$?[] and words are accepted
 	If (!RegExMatch(class, "[^\w#@$\?\[\]]", match))
 		s := Site%class%
+
 	; PartyPoker and Pacific have the same ahk class so we use a dirty hack :(
 	if (class == "#32770") {
 		WinGetTitle title, ` -`  ahk_id %id%

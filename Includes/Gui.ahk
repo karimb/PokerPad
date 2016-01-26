@@ -109,7 +109,7 @@ Settings() {
 	;sites_fulltilt := TV_Add("Full Tilt", options_sites)
 	;sites_stars := TV_Add("Poker Stars", options_sites)
 	sites_ipoker := TV_Add("iPoker", options_sites)
-	;sites_party := TV_Add("Party Poker", options_sites)
+	sites_party := TV_Add("Party Poker", options_sites)
 	;sites_everest := TV_Add("Everest Poker", options_sites)
 	;sites_ongame := TV_Add("Ongame", options_sites)
 	;sites_cake := TV_Add("Cake Poker", options_sites)
@@ -325,7 +325,7 @@ Settings() {
 	Gui, Add, Edit, Hidden vmaxRandom w40, %maxRandom%
 	
 	rules .= ",b5 c2__l20 p5 w130|l5 p5 w130"
-	ctrlCounts .= ",3"
+	ctrlCounts .= ",4"
 	Gui, Add, Text, Hidden, Enable PokerPad for these sites:
 	/*
 	IniRead, load, PokerPad.ini, General, FullTilt, 1
@@ -335,8 +335,8 @@ Settings() {
 	*/
 	IniRead, load, PokerPad.ini, General, iPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vipoker, iPoker
-	;IniRead, load, PokerPad.ini, General, PartyPoker, 1
-	;Gui, Add, CheckBox, Hidden Checked%load% vparty, Party Poker
+	IniRead, load, PokerPad.ini, General, PartyPoker, 1
+	Gui, Add, CheckBox, Hidden Checked%load% vparty, Party Poker
 	/*
 	IniRead, load, PokerPad.ini, General, EverestPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% veverest, Everest Poker
@@ -383,7 +383,6 @@ Settings() {
 	;r := SubStr(postflop_ipoker, 8, 1)
 	;Gui, Add, DropDownList, Hidden vpostflop_ipoker Choose%r%, Button 1|Button 2|Button 3
 
-/*
 	rules .= ","
 	ctrlCounts .= ",4"
 	Gui, Add, Text, Hidden, Path:
@@ -392,7 +391,6 @@ Settings() {
 	global PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal
 	decimal := PartyPoker_Decimal ? PartyPoker_Decimal : "."
 	Gui, Add, Edit, Hidden vformat_party, %PartyPoker_Currency%1%PartyPoker_Separator%000%decimal%00
-*/
 
 /*
 	rules .= ","
@@ -740,9 +738,10 @@ Settings() {
 			*/
 			else if (A_EventInfo == sites_ipoker)
 				selected := 10
-			/*
+			
 			else if (A_EventInfo == sites_party)
 				selected := 11 
+			/*
 			else if (A_EventInfo == sites_everest)
 				selected := 14
 			else if (A_EventInfo == sites_ongame)
@@ -753,7 +752,7 @@ Settings() {
 				selected := 17
 			*/
 			else if (A_EventInfo == sites_pacific)
-				selected := 11
+				selected := 12
 			Settings_SetVisibility(ctrls, ctrlCounts, selected, "Show")
 		}
 		return

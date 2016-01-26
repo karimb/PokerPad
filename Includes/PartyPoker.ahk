@@ -26,7 +26,7 @@ PartyPoker() {
 	LoadCurrencyFormat("PartyPoker")
 
 	
-	PartyPoker_LobbyWindow = PartyPoker.com ahk_class #32770
+	PartyPoker_LobbyWindow = Poker Lobby ahk_class #32770
 	PartyPoker_TournamentLobbyWindow = Tournament lobby ahk_class #32770
 	PartyPoker_GameWindow = / ahk_class #32770
 	Site#32770 = PartyPoker
@@ -34,12 +34,12 @@ PartyPoker() {
 	Tile_Ratio#32770 := 486 / 363
 	PartyPoker_LastHandWindow = HH ahk_class #32770
 	; Table Controls
-	PartyPoker_Fold = AfxWnd90u21
-	PartyPoker_Call = AfxWnd90u22
-	PartyPoker_Raise = AfxWnd90u23
+	PartyPoker_Fold = AfxWnd90u23
+	PartyPoker_Call = AfxWnd90u24
+	PartyPoker_Raise = AfxWnd90u25
 	
-	PartyPoker_FoldBox = AfxWnd90u27
-	PartyPoker_FoldBox2 = AfxWnd90u26
+	PartyPoker_FoldBox = AfxWnd90u29
+	PartyPoker_FoldBox2 = AfxWnd90u28
 	PartyPoker_CallBox = AfxWnd42u22
 	PartyPoker_CallBox2 = AfxWnd42u25
 	PartyPoker_CallRaise = AfxWnd42u26
@@ -48,16 +48,16 @@ PartyPoker() {
 	PartyPoker_SitOut = Button5
 	PartyPoker_BetAmount = Edit2
 	PartyPoker_Chat = Edit1
-	PartyPoker_FoldAny = AfxWnd90u37
+	PartyPoker_FoldAny = AfxWnd90u28
 	PartyPoker_AutoMuck = Button2
-	PartyPoker_Pot = Static12
-	PartyPoker_Lobby = AfxWnd90u48
-	PartyPoker_LastHand = AfxWnd90u50
+	PartyPoker_Pot1 = Static14
+	PartyPoker_Pot2 = Static15
+	;PartyPoker_Lobby = AfxWnd90u48
+	PartyPoker_LastHand = Static8
 	PartyPoker_Time = AfxWnd42u37
 	; Ring Table Specific
 	PartyPoker_StandUp = Button4
 	PartyPoker_AutoPost = Button1
-	
 	SetClientHotkeys("PartyPoker")
 	GroupAdd, GameWindows, "- ahk_class #32770"
 	return true
@@ -65,22 +65,38 @@ PartyPoker() {
 
 	
 PartyPoker_BetRelativePot(factor) {
-	local pot, call, raise, s
+	local pot, call, raise, s, r
 	if !IsControlVisible(PartyPoker_BetAmount)
 		return
 		
-	ControlGetText, pot, %PartyPoker_Pot%
-	StringGetPos, s, pot, %A_Space%, R
-	pot := CurrencyToFloat(SubStr(pot, s+2), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
-	local call
+	if IsControlVisible(PartyPoker_Pot1) {
+		ControlGetText, pot, %PartyPoker_Pot1%
+		;StringGetPos, s, pot, %A_Space%, R
+		RegExMatch(pot, "\D?(\d+\.?\d*)", match)
+		if !ErrorLevel
+			pot := match1
+	}
+	else {
+		ControlGetText, pot, %PartyPoker_Pot2%
+		RegExMatch(pot, "\D?(\d+\.?\d*)", match)
+		pot := match1
+	}
+	;pot := CurrencyToFloat(pot, PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
+	
 	ControlGetText, call, %PartyPoker_Call%
-	s := InStr(call, "(")
+	RegExMatch(call, "(\d+\.?\d*)", match) 
+	if !ErrorLevel
+		call := match1
+	else
+		call := 0
+	/*s := InStr(call, "(")
 	if s {
 		s += 1
 		call := CurrencyToFloat(SubStr(call, s, StrLen(call)-s-1), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
 	} else
 		call := 0
-	local raise, r
+	*/
+	
 	local blind := PartyPoker_GetBlind(true)
 	/*Loop {
 		ControlGetText, raise, %PartyPoker_Raise%
@@ -93,12 +109,14 @@ PartyPoker_BetRelativePot(factor) {
 	}
 	*/
 	ControlGetText, raise, %PartyPoker_Raise%
-	s := InStr(raise, "to `n")
-	if s {
-		s += 4
-		raise := CurrencyToFloat(SubStr(raise, s, StrLen(raise)-s), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
-	} else
-		raise := 0
+	;s := InStr(raise, "to `n")
+	RegExMatch(raise, "\D?(\d+\.?\d*)", match)
+	raise := match1
+	;if s {
+	;	s += 4
+	;	raise := CurrencyToFloat(SubStr(raise, s), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
+	;} else
+	;	raise := 0
 	;MsgBox pot %pot% call %call% raise %raise%
 	ControlSetText, % PartyPoker_BetAmount, % GetAmount(GetRoundedAmount(GetBet(factor, pot, call, raise, PartyPoker_GetBlind(true)), PartyPoker_GetRound(Rounding, Rounding)), PartyPoker_Decimal)
 	if (rtick) {
