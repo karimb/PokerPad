@@ -48,6 +48,8 @@ if Microgaming_GameWindow
 	Menu, Open, Add, Microgaming, Microgaming
 if Pacific_GameWindow
 	Menu, Open, Add, Pacific, Pacific
+if SkyPoker_GameWindow
+	Menu, Open, Add, Sky Poker, SkyPoker
 Menu, Tray, Add, &Open, :Open
 Menu, Tray, Add
 Menu, Tray, Add, &Pause/Unpause, PauseScript
@@ -134,6 +136,7 @@ Ongame:
 CakePoker:
 Microgaming:
 Pacific:
+SkyPoker:
 	OpenClient(A_ThisLabel)
 	return
 	
@@ -233,6 +236,9 @@ SetHotkeys() {
 	IniRead, load, PokerPad.ini, General, Pacific, 1
 	if load
 		Pacific()
+	IniRead, load, PokerPad.ini, General, SkyPoker, 1
+	if load
+		SkyPoker()
 		
 	Hotkey, IfWinActive, ahk_group GameWindows
 	local hotkey, names
@@ -348,8 +354,10 @@ Notify(action, id) {
 	}
 }
 
+id := 0
+
 InvokeHotkey(action) {
-	local id, title, class, s
+	local title, class, s
 	if UseMouse {
 		MouseGetPos, , , id
 	} else {
@@ -503,6 +511,8 @@ AutoPostAll(on) {
 		Microgaming_AutoPostAll(on)
 	if Pacific_GameWindow
 		Pacific_AutoPostAll(on)
+	if SkyPoker_GameWindow
+		SkyPoker_AutoPostAll(on)
 }
 
 SitInAll(in) {
@@ -525,6 +535,8 @@ SitInAll(in) {
 		Microgaming_SitInAll(in)
 	if Pacific_GameWindow
 		Pacific_SitInAll(in)
+	if SkyPoker_GameWindow
+		SkyPoker_SitInAll(in)
 }
 
 LeaveAll:
@@ -546,6 +558,8 @@ LeaveAll:
 		Microgaming_CloseGameWindows(Microgaming_GameWindow)
 	if Pacific_GameWindow
 		Pacific_CloseGameWindows(Pacific_GameWindow)
+	if SkyPoker_GameWindow
+		Skypoker_CloseGameWindows(SkyPoker_GameWindow)
 	return
 
 Debug() {
@@ -583,7 +597,7 @@ Debug:
 
 IsChecked(ByRef area, relative = 1, color = 0x000000, ByRef id = "") {
 	GetWindowArea(x, y, w, h, area, relative, id)
-	return Display_PixelSearch(x, y, h, h, color, 16, id)
+	return Display_PixelSearch(x, y, w, h, color, 16, id)
 }
 
 GetBet(factor, pot, call, raise, blind) {
@@ -658,6 +672,6 @@ GetFactor(var, ByRef factor) {
 #Include Includes\CakePoker.ahk
 #Include Includes\Microgaming.ahk
 #Include Includes\Pacific.ahk
-
+#Include Includes\SkyPoker.ahk
 
 	

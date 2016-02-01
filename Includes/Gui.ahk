@@ -79,9 +79,9 @@ Settings() {
 	static fixed, fixed1, fixed2, fixed3, fixed4, fixed5, fixed6, fixed7, fixed8, fixed9, ftick
 	static preflop1, flop1, turn1, river1, street1, preflop2, flop2, turn2, river2, street2, preflop3, flop3, turn3, river3, street3
 	static betRounding, betIncrement, betIncrement2, minRandom, maxRandom, monitors, tables, mouse
-	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific
-	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific
-	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific
+	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific, sky
+	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific, sites_sky
+	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific, path_sky
 	static theme_stars, theme_cake, theme_micro
 	static preflop_ipoker, postflop_ipoker, pot_ipoker
 	static timebank_pacific
@@ -115,6 +115,7 @@ Settings() {
 	;sites_cake := TV_Add("Cake Poker", options_sites)
 	;sites_micro := TV_Add("Microgaming", options_sites)
 	sites_pacific := TV_Add("888/Pacific Poker", options_sites)
+	sites_sky := TV_Add("Sky Poker", options_sites)
 	;options_reload := TV_Add("Reload", options)
 	;options_autoload := TV_Add("Auto Load", options)
 
@@ -325,7 +326,7 @@ Settings() {
 	Gui, Add, Edit, Hidden vmaxRandom w40, %maxRandom%
 	
 	rules .= ",b5 c2__l20 p5 w130|l5 p5 w130"
-	ctrlCounts .= ",4"
+	ctrlCounts .= ",5"
 	Gui, Add, Text, Hidden, Enable PokerPad for these sites:
 	/*
 	IniRead, load, PokerPad.ini, General, FullTilt, 1
@@ -349,6 +350,8 @@ Settings() {
 	*/
 	IniRead, load, PokerPad.ini, General, Pacific, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vpacific, Pacific Poker
+	IniRead, load, PokerPad.ini, General, SkyPoker, 1
+	Gui, Add, CheckBox, Hidden Checked%load% vsky, Sky Poker
 	
 	rules .= ",a2 v1|w200"
 /*
@@ -438,6 +441,11 @@ Settings() {
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
 	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank`n(Restart required)
+	
+	rules .= ","
+	ctrlCounts .= ",2"
+	Gui, Add, Text, Hidden, Path:
+	Gui, Add, Edit, Hidden vpath_sky, % GetPath("SkyPoker")
 	
 	/*
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
@@ -753,6 +761,8 @@ Settings() {
 			*/
 			else if (A_EventInfo == sites_pacific)
 				selected := 12
+			else if (A_EventInfo == sites_sky)
+				selected := 13
 			Settings_SetVisibility(ctrls, ctrlCounts, selected, "Show")
 		}
 		return

@@ -364,6 +364,8 @@ CreateIni() {
 		[Pacific]
 		Path=\PacificPoker\bin\888poker.exe
 		Timebank=1
+		[SkyPoker]
+		Path=\SkyPoker\SkyPoker.exe
 		[CakePoker]
 		Path=\Cake Poker\cake.exe
 		Themes=CakePoker
