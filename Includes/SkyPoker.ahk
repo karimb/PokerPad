@@ -170,7 +170,7 @@ SkyPoker_GetPot(factor) {
 	Sleep, 200
 	pot := Clipboard
 	if !(factor * pot) 
-		MsgBox, GetPot failed
+		FileAppend, GetPot failed`n, PokerPad.log 
 	return (factor * pot)
 }
 
@@ -179,8 +179,10 @@ SkyPoker_CheckBet(bet) {
 	Sleep, 200
 	if (Clipboard == bet)
 		return 1
-	else 	
+	else {
+		FileAppend, Checking of the pot failed`n, PokerPad.log 
 		return 0
+	}
 }
 
 SkyPoker_Bet(ByRef betbox, bet = "") {
@@ -198,10 +200,8 @@ SkyPoker_BetRelativePot(factor) {
 			if (rtick)
 				SkyPoker_ClickButton("Raise")
 		}
-		else {
+		else
 			SkyPoker_Bet(SkyPoker_BetBox, bet)
-			MsgBox, Checking of the pot failed
-		}
 	}
 }
 
@@ -215,10 +215,8 @@ SkyPoker_FixedBet(factor) {
 			if (ftick)
 				SkyPoker_ClickButton("Raise")
 		}
-		else {
+		else
 			SkyPoker_Bet(SkyPoker_BetBox, pot)
-			MsgBox, Checking of the pot failed
-		}
 	}
 }
 
