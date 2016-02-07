@@ -147,6 +147,7 @@ IPoker_AdjustClick(x, y, c = 1) {
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
+	Sleep, 50
 }
 
 ; Return true if the chat window is maximized 
@@ -197,7 +198,7 @@ IPoker_GetPot(factor) {
 	;select and copy
 	IPoker_AdjustClick(711, 508)
 	Send, {Home}+{End}^c
-	Sleep, 50
+	Sleep, 200
 	pot := Clipboard
 	return (factor * pot)
 }
@@ -205,7 +206,7 @@ IPoker_GetPot(factor) {
 Ipoker_CheckBet(bet) {
 	IPoker_AdjustClick(711, 508)
 	Send, {Home}+{End}^c
-	Sleep, 50
+	Sleep, 200
 	if (Clipboard == bet)
 		return 1
 	else

@@ -79,7 +79,7 @@ Pacific_GetPot(factor) {
 	;select and copy
 	Pacific_AdjustClick(736, 514)
 	Send, {Home}+{End}^c
-	Sleep, 50
+	Sleep, 200
 	pot := Clipboard
 	return (factor * pot)
 }
@@ -87,7 +87,7 @@ Pacific_GetPot(factor) {
 Pacific_CheckBet(bet) {
 	Pacific_AdjustClick(736, 514)
 	Send, {Home}+{End}^c
-	Sleep, 50
+	Sleep, 200
 	if (Clipboard == bet)
 		return 1
 	else
@@ -202,6 +202,7 @@ Pacific_AdjustClick(x, y, c = 1) {
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
+	Sleep, 50
 }
 
 Pacific_ClickButton(button, id = "") {

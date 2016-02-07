@@ -240,7 +240,7 @@ SetHotkeys() {
 	if load
 		SkyPoker()
 		
-	Hotkey, IfWinActive, ahk_group GameWindows
+	Hotkey, IfWinExist, ahk_group GameWindows
 	local hotkey, names
 	IniRead, hotkey, PokerPad.ini, Hotkeys, TypeBet, 0
 	IniRead, rtick, PokerPad.ini, Hotkeys, Rtick, 0
@@ -358,24 +358,6 @@ id := 0
 
 InvokeHotkey(action) {
 	local title, class, s
-	if UseMouse {
-		MouseGetPos, , , id
-	} else {
-		WinGet, id, ID
-		if WinExist("blue_bar ahk_class AutoHotkeyGUI") {
-			SendMessage, 0x5555
-			id := ErrorLevel
-		}
-	}
-	WinGet, aid, ID, A
-	if !(aid == id) {
-		WinActivate, ahk_id %id%
-		WinWaitActive, ahk_id %id%, , 1
-		if ErrorLevel
-			return
-	} else
-		IfWinNotExist, ahk_id %id%
-			return
 	Notify(action, id)
 	WinGetClass, class
 	StringReplace, class, class, .
@@ -435,7 +417,28 @@ AllInThisHand:
 Lobby:
 SitOut:
 	Critical, On
-	InvokeHotkey(A_ThisLabel)
+	if UseMouse {
+		MouseGetPos, , , id
+	} else {
+		WinGet, id, ID
+		if WinExist("blue_bar ahk_class AutoHotkeyGUI") {
+			SendMessage, 0x5555
+			id := ErrorLevel
+		}
+	}
+	WinGet, ingroup, ID,  ahk_id %id% ahk_group GameWindows
+	if (ingroup) {
+		WinGet, aid, ID, A
+		if !(aid == id) {
+			WinActivate, ahk_id %id%
+			WinWaitActive, ahk_id %id%, , 1
+			if ErrorLevel
+				return
+		} else
+			IfWinNotExist, ahk_id %id%
+				return	
+		InvokeHotkey(A_ThisLabel)
+	}
 	return
 
 	
@@ -642,6 +645,7 @@ Bet(ByRef bet) {
 	Sleep, 50
 	if bet
 		Send, %bet%
+	Sleep, 50
 	BlockInput, Off
 }
 

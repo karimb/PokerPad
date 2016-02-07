@@ -88,6 +88,7 @@ SkyPoker_CallBox(id = "") {
 	SkyPoker_LastHandWindow = Sky Poker ahk_class ApolloRuntimeContentWindow
 	SetClientHotkeys("SkyPoker")
 	GroupAdd, GameWindows, / ahk_class ApolloRuntimeContentWindow
+	debug = 1
 	return true
 }
 
@@ -141,6 +142,7 @@ SkyPoker_AdjustClick(x, y, c = 1) {
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
+	Sleep, 50
 }
 
 
@@ -148,6 +150,7 @@ SkyPoker_AdjustClick(x, y, c = 1) {
 ;they reach only one window
 SkyPoker_ClickButton(button, id = "") {
 	local x, y, w, h, bgr, box
+	temp := button
 	button := SkyPoker_%button%
 	;MsgBox % "Before: " . button .  " After: " . SkyPoker_AdjustSize(button)
 	box := SkyPoker_AdjustSize(button, id)
@@ -164,17 +167,19 @@ SkyPoker_GetPot(factor) {
 	;copy
 	;SkyPoker_AdjustClick(749, 495)
 	Send, {Home}+{End}^c
-	Sleep, 50
+	Sleep, 200
 	pot := Clipboard
+	if !(factor * pot) 
+		MsgBox, GetPot failed
 	return (factor * pot)
 }
 
 SkyPoker_CheckBet(bet) {
 	Send, {Home}+{End}^c
-	Sleep, 50
+	Sleep, 200
 	if (Clipboard == bet)
 		return 1
-	else
+	else 	
 		return 0
 }
 
@@ -189,11 +194,14 @@ SkyPoker_BetRelativePot(factor) {
 		bet := GetRoundedAmount(SkyPoker_GetPot(factor), round)
 		SkyPoker_Bet(SkyPoker_BetBox, bet)
 		local c:= SkyPoker_CheckBet(bet)
-		if (c) 
+		if (c) {
 			if (rtick)
 				SkyPoker_ClickButton("Raise")
-			else
-				SkyPoker_Bet(SkyPoker_BetBox, bet)
+		}
+		else {
+			SkyPoker_Bet(SkyPoker_BetBox, bet)
+			MsgBox, Checking of the pot failed
+		}
 	}
 }
 
@@ -203,11 +211,14 @@ SkyPoker_FixedBet(factor) {
 		pot := GetAmount(GetDollarRound(factor * SkyPoker_GetBlind(true)), SkyPoker_Decimal)
 		SkyPoker_Bet(SkyPoker_BetBox, pot)
 		local c := SkyPoker_CheckBet(pot)
-		if (c) 
+		if (c) { 
 			if (ftick)
 				SkyPoker_ClickButton("Raise")
-			else
-				SkyPoker_Bet(SkyPoker_BetBox, pot)
+		}
+		else {
+			SkyPoker_Bet(SkyPoker_BetBox, pot)
+			MsgBox, Checking of the pot failed
+		}
 	}
 }
 
