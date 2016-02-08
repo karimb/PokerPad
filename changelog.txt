@@ -1,14 +1,13 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
-Master
+v0.1.38 (08-02-2016)
 - Added delays as PokerPad was reading text box before the poker client
   had time to update them
 - Improve the "Click on window under Mouse". This now avoid double
   clicking.
 - SkyPoker: fixed the double writing of of the bet in the bet box
 - Small doc update
--- Current Master Branch contains debug code --
 
 v0.1.37 (31-01-2016)
 - Initial support for SkyPoker
