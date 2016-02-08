@@ -169,8 +169,8 @@ SkyPoker_GetPot(factor) {
 	Send, {Home}+{End}^c
 	Sleep, 200
 	pot := Clipboard
-	if !(factor * pot) 
-		FileAppend, GetPot failed`n, PokerPad.log 
+	;if !(factor * pot) 
+		;FileAppend, GetPot failed`n, PokerPad.log 
 	return (factor * pot)
 }
 
@@ -180,7 +180,7 @@ SkyPoker_CheckBet(bet) {
 	if (Clipboard == bet)
 		return 1
 	else {
-		FileAppend, Checking of the pot failed`n, PokerPad.log 
+		;FileAppend, Checking of the pot failed. Clip board = %Clipboard% bet = %bet%`n, PokerPad.log 
 		return 0
 	}
 }
