@@ -416,7 +416,7 @@ Reload:
 AllInThisHand:
 Lobby:
 SitOut:
-	Critical, On
+	
 	if UseMouse {
 		MouseGetPos, , , id
 	} else {
@@ -427,18 +427,26 @@ SitOut:
 		}
 	}
 	WinGet, ingroup, ID,  ahk_id %id% ahk_group GameWindows
+	
 	if (ingroup) {
 		WinGet, aid, ID, A
 		if !(aid == id) {
 			WinActivate, ahk_id %id%
 			WinWaitActive, ahk_id %id%, , 1
-			if ErrorLevel
+			if ErrorLevel {
+				send, {%A_ThisHotkey%}
 				return
-		} else
-			IfWinNotExist, ahk_id %id%
-				return	
+			}
+		} else if (IfWinNotExist, ahk_id %id%) {
+			send, {%A_ThisHotkey%}
+			return
+		}
+		Critical, On
 		InvokeHotkey(A_ThisLabel)
+		Critical, Off
 	}
+	else
+		send, {%A_ThisHotkey%}
 	return
 
 	
@@ -520,14 +528,17 @@ AutoPostAll(on) {
 
 SitInAll(in) {
 	global
+	/*
 	if FullTilt_GameWindow
 		FullTilt_SitInAll(in)
 	if PokerStars_GameWindow
 		PokerStars_SitInAll(in)
+	*/
 	if IPoker_GameWindow
 		IPoker_SitInAll(in)
 	if PartyPoker_GameWindow
 		PartyPoker_SitInAll(in)
+	/*
 	if EverestPoker_GameWindow
 		EverestPoker_SitInAll(in)
 	if Ongame_GameWindow
@@ -538,6 +549,7 @@ SitInAll(in) {
 		Microgaming_SitInAll(in)
 	if Pacific_GameWindow
 		Pacific_SitInAll(in)
+	*/
 	if SkyPoker_GameWindow
 		SkyPoker_SitInAll(in)
 }

@@ -1,6 +1,10 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.39
+- Needed to fix interaction with non gaming windows that were broken by the changes of v0.1.38
+- Party: Will press Check instead of Fold if the Check button is available
+
 v0.1.38 (08-02-2016)
 - Added delays as PokerPad was reading text box before the poker client
   had time to update them

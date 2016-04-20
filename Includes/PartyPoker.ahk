@@ -58,6 +58,7 @@ PartyPoker() {
 	; Ring Table Specific
 	PartyPoker_StandUp = Button4
 	PartyPoker_AutoPost = Button1
+	PartyPoker_ButtonTab = AfxWnd90u5
 	SetClientHotkeys("PartyPoker")
 	GroupAdd, GameWindows, "- ahk_class #32770"
 	return true
@@ -167,7 +168,10 @@ PartyPoker_CheckAll(ByRef checkbox, checked) {
 	WinGet windows, List, %PartyPoker_GameWindow%
 	Loop, %windows%	{
 		id := windows%A_Index%
-		if (IsControlChecked(checkbox, id) != checked && IsControlVisible(checkbox, id))
+		/* if (IsControlChecked(checkbox, id) != checked && IsControlVisible(checkbox, id))
+		*/
+			;ClickControl(PartyPoker_ButtonTab, id)
+			Sleep 1000
 			ClickControl(checkbox, id)
 	}
 }
@@ -224,6 +228,11 @@ PartyPoker_NumpadDigit:
 	ForwardNumpadKey(A_ThisHotkey, PartyPoker_BetAmount)
 	return
 PartyPoker_Fold:
+	if IsControlVisible(PartyPoker_Call) {
+		ControlGetText, CC, %PartyPoker_Call%
+		if (CC = "Check")
+			ClickControl(PartyPoker_Call)
+	}
 	if IsControlVisible(PartyPoker_Fold)
 		ClickControl(PartyPoker_Fold)
 	else if (!InStr(A_ThisHotkey, "^") && IsControlVisible(PartyPoker_FoldBox))
@@ -349,6 +358,7 @@ PartyPoker_Lobby:
 	return
 	return
 PartyPoker_SitOut:
-	if IsControlVisible(PartyPoker_SitOut)
-		ClickControl(PartyPoker_SitOut)
+	/*if IsControlVisible(PartyPoker_SitOut)
+	*/
+		;ClickControl(PartyPoker_SitOut)
 	return
