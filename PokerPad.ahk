@@ -615,24 +615,35 @@ IsChecked(ByRef area, relative = 1, color = 0x000000, ByRef id = "") {
 	return Display_PixelSearch(x, y, w, h, color, 16, id)
 }
 
-GetBet(factor, pot, call, raise, blind) {
+/*
+BB = call*2 + b or (no call and raise > blind)
+- raise = call*2+b then fpot = (pot+call) * factor + call + blind <- particular
+- no call and raise > blind fpot = pot*factor + blind <- particular
+
+
+preflop non blind = call*2 - b  then fpot = (pot+call) * factor + call
+
+SB = (call*2 and call < pot) or call < blind
+- call*2 and call < pot then fpot = (pot+call) * factor + call + small blind <- particular
+- call < blind then fpot = (pot+call) * factor + call
+
+postflop = (call*2 and call = pot) or (no call and raise = blind)
+- post = call*2 and call = pot then fpot = (pot+call)*factor+call
+- no call and raise = blind fpot = pot * factor 
+*/
+GetBet(factor, pot, call, raise, blind, sblind = 0) {
+	local fpot, bet
+	fpot := pot * factor
+	bet := 0
 	if call {
-		pot += call
-		if (call < blind) { ; small blind
+		fpot := (pot + call) * factor + call
+		if (raise  = call * 2 + blind) ;big blind opened
 			bet := blind
-		} else { ; raise or open bet preflop
-			/* bet := raise - call
-			if (call > bet)
-			*/
-				bet := call
-		}
-	} else if (raise > blind) { ; big blind
+		else if (raise = call * 2 and call < pot) ; small blind opened
+			bet := sblind
+	} else if (raise > blind) ; big blind check
 		bet := blind
-	} else { ; open bet postflop
-		bet := 0
-	}
-	pot *= factor
-	return bet + pot
+	return bet + fpot
 }
 
 GetPot(ByRef pot, call, raise, blind) {

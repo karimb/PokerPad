@@ -1,6 +1,9 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.40
+- Party: Fixed the raise size calculation when there is at least a bet in the pot. Also fixed the case when we use one pot size then change our mind and use a different pot size
+
 v0.1.39 (04-05-2016)
 - Needed to fix interaction with non gaming windows that were broken by the changes of v0.1.38
 - Party: Will press Check instead of Fold if the Check button is available

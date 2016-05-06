@@ -59,6 +59,7 @@ PartyPoker() {
 	PartyPoker_StandUp = Button4
 	PartyPoker_AutoPost = Button1
 	PartyPoker_ButtonTab = AfxWnd90u5
+	PartyPoker_Min = AfxWnd90u45
 	SetClientHotkeys("PartyPoker")
 	GroupAdd, GameWindows, "- ahk_class #32770"
 	return true
@@ -69,7 +70,13 @@ PartyPoker_BetRelativePot(factor) {
 	local pot, call, raise, s, r
 	if !IsControlVisible(PartyPoker_BetAmount)
 		return
-		
+	
+	if IsControlVisible(PartyPoker_Min)
+	{
+		ClickControl(PartyPoker_Min, id)
+		Sleep, 100
+	}
+	
 	if IsControlVisible(PartyPoker_Pot1) {
 		ControlGetText, pot, %PartyPoker_Pot1%
 		;StringGetPos, s, pot, %A_Space%, R
@@ -82,7 +89,6 @@ PartyPoker_BetRelativePot(factor) {
 		RegExMatch(pot, "\D?(\d+\.?\d*)", match)
 		pot := match1
 	}
-	;pot := CurrencyToFloat(pot, PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
 	
 	ControlGetText, call, %PartyPoker_Call%
 	RegExMatch(call, "(\d+\.?\d*)", match) 
@@ -90,36 +96,14 @@ PartyPoker_BetRelativePot(factor) {
 		call := match1
 	else
 		call := 0
-	/*s := InStr(call, "(")
-	if s {
-		s += 1
-		call := CurrencyToFloat(SubStr(call, s, StrLen(call)-s-1), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
-	} else
-		call := 0
-	*/
 	
 	local blind := PartyPoker_GetBlind(true)
-	/*Loop {
-		ControlGetText, raise, %PartyPoker_Raise%
-		if (r == raise) {
-			break
-		}
-		r := raise
-		raise -= blind
-		ControlSetText, %PartyPoker_BetAmount%, %raise%
-	}
-	*/
+
 	ControlGetText, raise, %PartyPoker_Raise%
-	;s := InStr(raise, "to `n")
 	RegExMatch(raise, "\D?(\d+\.?\d*)", match)
 	raise := match1
-	;if s {
-	;	s += 4
-	;	raise := CurrencyToFloat(SubStr(raise, s), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
-	;} else
-	;	raise := 0
-	;MsgBox pot %pot% call %call% raise %raise%
-	ControlSetText, % PartyPoker_BetAmount, % GetAmount(GetRoundedAmount(GetBet(factor, pot, call, raise, PartyPoker_GetBlind(true)), PartyPoker_GetRound(Rounding, Rounding)), PartyPoker_Decimal)
+	;MsgBox pot %pot% call %call% raise %raise% blind %blind%
+	ControlSetText, % PartyPoker_BetAmount, % GetAmount(GetRoundedAmount(GetBet(factor, pot, call, raise, PartyPoker_GetBlind(true), PartyPoker_GetBlind(false)), PartyPoker_GetRound(Rounding, Rounding)), PartyPoker_Decimal)
 	if (rtick) {
 		Sleep, 400
 		ClickControl(PartyPoker_Raise)
