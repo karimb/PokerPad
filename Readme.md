@@ -13,7 +13,7 @@ and download the zip file of the latest release (at the top on github) then unzi
 There are two equivalent ways of installing PokerPad:
 
 1. Run the file PokerPad.exe
-2. Download AutoHotkey classic from http://www.autohotkey.com/download/AutoHotkey104805_Install.exe  
+2. Download AutoHotkey 1.1 from https://autohotkey.com/download/ 
 Once AutoHotkey is installed, simply run PokerPad.ahk
 
 ##Manual

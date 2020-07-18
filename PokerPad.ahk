@@ -246,7 +246,6 @@ SetHotkeys() {
 	IniRead, rtick, PokerPad.ini, Hotkeys, Rtick, 0
 	IniRead, ftick, PokerPad.ini, Hotkeys, Ftick, 1
 	IniRead, pot_ipoker, PokerPad.ini, iPoker, PotButton, Button 3
-	IniRead, timebank_pacific, PokerPad.ini, Hotkeys, Timebank, 1
 	if hotkey {
 		Hotkey, Numpad0, NumpadDigit
 		Hotkey, Numpad1, NumpadDigit
@@ -365,12 +364,6 @@ InvokeHotkey(action) {
 	If (!RegExMatch(class, "[^\w#@$\?\[\]]", match))
 		s := Site%class%
 
-	; PartyPoker and Pacific have the same ahk class so we use a dirty hack :(
-	if (class == "#32770") {
-		WinGetTitle title, ` -`  ahk_id %id%
-		if !title
-			s := "Pacific"
-	}
 	local label := s . "_" . action
 	if IsLabel(label)
 		GoSub, %label%

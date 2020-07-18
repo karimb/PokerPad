@@ -1,4 +1,5 @@
 *.ini
 *.zip
+*.log
 *bak
 index.html

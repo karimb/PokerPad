@@ -10,6 +10,7 @@ SysGet, Caption, 4
 SysGet, Border, 45
 SysGet, ResizeBorder, 32
 SysGet, ResizeBorderY, 33
+debug := 1
  
  
  
@@ -350,6 +351,19 @@ CurrencyToFloat(amount) {
 }
 */
 
+
+WriteLog(str) {
+	local systime, final
+	if debug != 0
+	{
+		FormatTime, systime,, HH:mm:ss
+		final := systime . ": " . str . "`n"
+		FileAppend, %final%, PokerPad.log
+		;FileAppend, %str%, PokerPad.log
+		;FileAppend, `n, PokerPad.log
+	}
+}
+
 CreateIni() {
 	FileAppend,
 		( LTrim
@@ -363,7 +377,7 @@ CreateIni() {
 		Path=\PokerRoom.com\StartPokerRoom.exe
 		[Pacific]
 		Path=\PacificPoker\bin\888poker.exe
-		Timebank=1
+		Timebank=0
 		[SkyPoker]
 		Path=\SkyPoker\SkyPoker.exe
 		[CakePoker]

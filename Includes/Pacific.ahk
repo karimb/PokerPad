@@ -11,62 +11,76 @@ Pacific_GetBlind(big) {
 	return CurrencyToFloat(blind)
 }
 
+Pacific_FormatAmount(amnt) {
+	local pot
+	if (InStr(amnt, "¢")) 
+		pot := SubStr(amnt, 1, StrLen(amnt) - 1)  / 100.0
+	else if (InStr(amnt, "$"))
+		pot := SubStr(amnt, 2)
+    else
+      pot := amnt
+	return pot
+}
+
+
 Pacific_CheckTimeBank(id, context) {
-	local w,h,x,y,bgr,color,diff
-	x := 681
-	y := 439
+	local bgr,box,box0,box1,box2,box3,box4,color,diff
+	
 	;the color is the orange used by the timebank button in BGR
-	color := 0x037FFE
-	diff := 10
-	WinGetPos, , , w, h, ahk_id %id%
-	w /= 800.0
-	h /= 579.0
-	x := Round(x * w)
-	y := Round(y * h)
-	bgr := Display_GetPixel(context, x, y) 
+	color := 0x20B5FC
+	diff := 20
+	Pacific_TimeBank = 751 563 2 2
+	Pacific_TimeBank := Pacific_AdjustSize(Pacific_TimeBank, id)
+	StringSplit, box, Pacific_TimeBank, %A_Space%
+	bgr := Display_GetPixel(context, box1, box2)
+	;MsgBox % box1 "-" box2 "-" bgr
 	;PixelGetColor, bgr, x, y
 	return Display_CompareColors(bgr, color, diff)
 }
 
+
 /* 
- * All boxes assume a window dimension of 800x578. The Windows theme MUST be Win2000
+ * All boxes assume a window dimension of 952x735. The Windows theme MUST be Win2000 (also called "Windows Classic" in Personalise)
  * so change the the theme in WinXP/Win7 to Win2000 before proceeding
  * all values must be reduced by 4 pixels in x and 23 in y (border width/height in Win2000)
+ * (also called "client" coordinate in AHK 1.1)
  * For example, 600 300 10 5 becomes 596 277 10 5
  * The functions AdjustClick and AdjustSize then make adjustments for different window sizes and borders
  */
 Pacific() {
 	global
-	Pacific_Fold = 331 452 135 12
-	Pacific_CheckFold = 331 487 135 10
-	Pacific_Call = 486 452 135 12
-	Pacific_Raise = 641 452 135 12
-	Pacific_FoldAny = 635 536 5 5
+	Pacific_Fold = 360 620 20 10
+	Pacific_CheckFold = 446 620 20 10
+	Pacific_Call = 446 620 20 12
+	Pacific_Raise = 580 620 20 12
+	;;Pacific_FoldAny = 635 536 5 5
 
-	Pacific_AutoPost = 482 535 5 5
-	Pacific_SitOut = 328 535 5 5
+	;;Pacific_AutoPost = 482 535 5 5
+	;Pacific_SitOut = 14 512 2 2
 
-	Pacific_AutoMuck = 
-	Pacific_Lobby = 658 35 120 12
+	;;Pacific_AutoMuck = 
+	;Pacific_Lobby = 680 27 80 5
 	;Pacific_LastHand = 
 	;Pacific_Options =
 	;Pacific_Settings
-	Pacific_TimeBank = 676 407 105 10
-	Pacific_Chat = 12 538 155 12
+	Pacific_TimeBank = 751 563 2 2
+	;;Pacific_Chat = 12 538 155 12
 
-	Pacific_IncreaseBet = 696 512 5 5
-	Pacific_DecreaseBet = 491 512 5 5
+	;Just wheel up for now
+	;Pacific_IncreaseBet = 542 680 2 2
+	;Pacific_DecreaseBet = 308 680 2 2
 
-	Pacific_Pot = 661 488 35 5
-	Pacific_BetBox = 726 512 45 5
+	Pacific_Pot = 470 660 10 2
+	Pacific_BetBox = 596 671 20 5
 
-	Pacific_GameWindow = / ahk_class #32770
-	Pacific_LobbyWindow = Lobby ahk_class #32770
-	Pacific_LastHandWindow = ^Instant Replay ahk_class DxWndClass
+	Pacific_GameWindow = / ahk_class Qt5QWindowOwnDC
+	Pacific_LobbyWindow = Lobby ahk_class Qt5QWindowIcon
+	Pacific_LastHandWindow = : ahk_class Qt5QWindowOwnDC
 	; Same as Party :(
-	;Site#32770 = Pacific
+	SiteQt5QWindowOwnDC = Pacific
 	SetClientHotkeys("Pacific")
-	GroupAdd, GameWindows, / ahk_class #32770
+	GroupAdd, GameWindows, / ahk_class Qt5QWindowOwnDC
+	IniRead, timebank_pacific, PokerPad.ini, Hotkeys, Timebank, 1
 	if (timebank_pacific)
 		SetTimer Pacific_AutoTimeBank, 4000
 }
@@ -77,15 +91,16 @@ Pacific_GetPot(factor) {
 	Pacific_ClickButton("Pot")
 	Sleep, 400
 	;select and copy
-	Pacific_AdjustClick(736, 514)
+	Pacific_AdjustClick(596, 671)
 	Send, {Home}+{End}^c
 	Sleep, 200
 	pot := Clipboard
+	pot := Pacific_FormatAmount(pot)
 	return (factor * pot)
 }
 	
 Pacific_CheckBet(bet) {
-	Pacific_AdjustClick(736, 514)
+	Pacific_AdjustClick(596, 671)
 	Send, {Home}+{End}^c
 	Sleep, 200
 	if (Clipboard == bet)
@@ -95,7 +110,7 @@ Pacific_CheckBet(bet) {
 }
 	
 Pacific_Bet(ByRef betbox, bet = "") {
-	Pacific_AdjustClick(736, 514)
+	Pacific_AdjustClick(596, 671)
 	Bet(bet)
 }
 
@@ -164,7 +179,7 @@ Pacific_GetRound(rounding, default) {
 	return default
 }
 
-;792x551 is the dimensions of the visible area of the default 800x578 window in Windows 2000
+;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
 Pacific_AdjustSize(box, id = "") {
 	local box0, box1, box2, box3, box4, w, h
 	if (id != "")
@@ -172,9 +187,9 @@ Pacific_AdjustSize(box, id = "") {
 	else
 		WinGetPos, , , w, h
 	w -= 2 * ResizeBorder	
-	w /= 792.0
+	w /= 944.0
 	h -= (2 * ResizeBorderY + Caption)
-	h /= 551.0
+	h /= 708.0
 	StringSplit, box, box, %A_Space%
 	box1 *= w
 	box1 += ResizeBorder
@@ -192,9 +207,9 @@ Pacific_AdjustClick(x, y, c = 1) {
 	local px,py,w, h
 	WinGetPos, , , w, h
 	w -= 2 * ResizeBorder	
-	w /= 792.0
+	w /= 944.0
 	h -= (2 * ResizeBorderY + Caption)
-	h /= 551.0
+	h /= 708.0
 	x := Round(x * w)
 	x += ResizeBorder
 	y := Round(y * h)
@@ -202,17 +217,20 @@ Pacific_AdjustClick(x, y, c = 1) {
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
+	WriteLog("AdjustClick to x: " x " y: " y)
 	Sleep, 50
 }
 
 Pacific_ClickButton(button, id = "") {
-	local x, y, w, h, box
+	local x, y, w, h, box, name
+	name := button
 	button := Pacific_%button%
 ;MsgBox % "Before: " . button .  " After: " . Pacific_AdjustSize(button)
 	box := Pacific_AdjustSize(button, id)
 	GetWindowArea(x, y, w, h, box, false, id)
-;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
 	ClickWindowRect(x, y, w, h, id)	
+	;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
+	WriteLog(name " - x: " x ", y:" y ", width: " w ", height:" h)
 }
 
 
@@ -235,7 +253,7 @@ Pacific_NumpadDigit:
 	return
 Pacific_Fold:
 	Pacific_ClickButton("Fold")
-	Pacific_ClickButton("CheckFold")
+	;Pacific_ClickButton("CheckFold")
 	return
 Pacific_Call:
 	Pacific_ClickButton("Call")
@@ -301,27 +319,29 @@ Pacific_Fixed9:
 	Pacific_FixedBet(Fixed9)
 	return
 Pacific_AllIn:
-	Send, {F8}
+	SendEvent, {WheelUp 1000}
 	return
 Pacific_LastHand:
 	ClickWindowArea2(Pacific_LastHand)
 	return
 Pacific_IncreaseBet:
 Pacific_IncreaseBet2:
-	Pacific_ClickButton("IncreaseBet")
+	SendEvent, {WheelUp}
+	;Pacific_ClickButton("IncreaseBet")
 	return
 Pacific_DecreaseBet:
 Pacific_DecreaseBet2:
-	Pacific_ClickButton("DecreaseBet")
+    SendEvent, {WheelDown}
+	;Pacific_ClickButton("DecreaseBet")
 	return
 Pacific_FoldAny:
-	ClickWindowArea2(Pacific_FoldAny)
+	;ClickWindowArea2(Pacific_FoldAny)
 	return
 Pacific_AutoPost:
-	ClickWindowArea2(Pacific_AutoPost)
+	;ClickWindowArea2(Pacific_AutoPost)
 	return
 Pacific_ToggleAutoMuck:
-	ClickWindowArea2(Pacific_AutoMuck)
+	;ClickWindowArea2(Pacific_AutoMuck)
 	return
 Pacific_AllInThisHand:
 	TrayTip, Not Supported!, All In*** is not supported for Pacific.
@@ -336,12 +356,13 @@ Pacific_SitOut:
 	ClickWindowArea2(Pacific_SitOut)
 	return
 Pacific_AutoTimeBank:
-	WinGet Wnd, List, / ahk_class #32770,,` -` ,
+	WinGet Wnd, List, / ahk_class Qt5QWindowOwnDC,,Lobby
 	Loop, %Wnd% {
 		id := Wnd%A_Index%
 		Display_CreateWindowCapture(device, context, pixels, id)
 		if (Pacific_CheckTimeBank(id, context)) {
-			Pacific_ClickButton("TimeBank", id)
+			ClickWindowArea2(Pacific_TimeBank,0, id)
+			;Pacific_ClickButton("TimeBank", id)
 		}
 		Display_DeleteWindowCapture(device, context, pixels, id)
 		ControlGet,visible,Visible,,,ahk_id %id%

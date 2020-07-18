@@ -20,7 +20,7 @@ Installation
 
 There are two equivalent ways of installing PokerPad:
 1. Run the file PokerPad.exe
-2. Download AutoHotkey classic from http://www.autohotkey.com/download/AutoHotkey104805_Install.exe
+2. Download AutoHotkey classic from https://autohotkey.com/download/
 Once AutoHotkey is installed, simply run PokerPad.ahk
 
 Manual

@@ -1,6 +1,10 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.41 
+- 888 (not ready yet - assume pot is 4th button): update to latest version of software.
+- Various little fixes: WheelUp/WheelDown
+
 v0.1.40
 - Party: Fixed the raise size calculation when there is at least a bet in the pot. Also fixed the case when we use one pot size then change our mind and use a different pot size
 

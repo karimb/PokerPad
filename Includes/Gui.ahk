@@ -68,7 +68,7 @@ GetSetting(section, key, default) {
 	return value
 }
 Settings() {
-	static tree, table_hotkeys, actions, betting, pot, fixed, street, global_hotkeys, options, options_betting, options_sites, options_autoload, options_reload
+	static tree, table_hotkeys, actions, betting, pot, street, global_hotkeys, options, options_betting, options_sites, options_autoload, options_reload
 	static sitInAll, sitOutAll, leaveAll, tile, activateTable, autoPostOnAll, autoPostOffAll, suspendHotkeys, debug
 	static lastHand, autoMuck, reload, lobby, allInThisHand
 	static fold, call, raise, ffold, clear, foldAny, autoPost, sitOut, left, right, up, down
@@ -579,7 +579,9 @@ Settings() {
 		IniWrite, %randomBet%, Pokerpad.ini, Hotkeys, RandomBet
 		IniWrite, %allIn%, Pokerpad.ini, Hotkeys, AllIn
 		IniWrite, %incBet%, Pokerpad.ini, Hotkeys, IncreaseBet
+		IniWrite, %incBet2%, Pokerpad.ini, Hotkeys, IncreaseBet2
 		IniWrite, %decBet%, Pokerpad.ini, Hotkeys, DecreaseBet
+		IniWrite, %decBet2%, Pokerpad.ini, Hotkeys, DecreaseBet2
 		IniWrite, %factor1%, Pokerpad.ini, Bets, Relative1
 		IniWrite, %factor2%, Pokerpad.ini, Bets, Relative2
 		IniWrite, %factor3%, Pokerpad.ini, Bets, Relative3
