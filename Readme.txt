@@ -29,6 +29,7 @@ Manual
 A slightly outdated quick start guide can be read at: https://github.com/karimb/PokerPad/wiki/Quick-Start-Guide
 
 Note that, in order to work with iPoker, the chat window of the iPoker client neeeds to be maximised. Also make sure the Widget Bar is NOT activated (Settings > Widgets > Show Widget Bar unticked).
+888 requires the 4th little button to be "100% Pot".
 
 Credit and Support
 ------------------
