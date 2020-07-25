@@ -18,7 +18,11 @@
 #Include Includes\Functions.ahk
 Critical, On
 OnMessage(0x5555, "HandleMessage")
-SendMode Play
+;SendMode Play
+SetControlDelay, -1
+SetKeyDelay, -1
+SetMouseDelay, -1
+SetDefaultMouseSpeed, 0
 CheckIniVersion()
 SetTitleMatchMode, RegEx
 IniRead, UseMouse, PokerPad.ini, General, UseMouse, 0
