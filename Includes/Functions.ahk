@@ -377,7 +377,7 @@ CreateIni() {
 		Path=\PokerRoom.com\StartPokerRoom.exe
 		[Pacific]
 		Path=\PacificPoker\bin\888poker.exe
-		Timebank=0
+		Timebank=1
 		[SkyPoker]
 		Path=\SkyPoker\SkyPoker.exe
 		[CakePoker]
