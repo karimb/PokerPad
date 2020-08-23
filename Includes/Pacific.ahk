@@ -71,6 +71,10 @@ Pacific() {
 	;Pacific_DecreaseBet = 308 680 2 2
 
 	Pacific_Pot = 470 660 10 2
+	Pacific_PotButton2 = 366 660 10 2
+	Pacific_PotButton3 = 421 660 10 2
+	Pacific_PotButton4 = 470 660 10 2
+	
 	Pacific_BetBox = 596 671 20 5
 
 	Pacific_GameWindow = / ahk_class Qt5QWindowOwnDC
@@ -86,9 +90,11 @@ Pacific() {
 }
 
 Pacific_GetPot(factor) {
-	local x, y, w, h, device, context, pixels, box, pot, pot2
-
-	Pacific_ClickButton("Pot")
+	local x, y, w, h, device, context, pixels, box, pot, pot2, btn
+	btn := SubStr(pot_pacific, 8, 1)
+	box := Pacific_AdjustSize(Pacific_PotButton%btn%)
+	GetWindowArea(x, y, w, h, box, false)
+	ClickWindowRect(x, y, w, h)
 	Sleep, 400
 	;select and copy
 	Pacific_AdjustClick(596, 671)

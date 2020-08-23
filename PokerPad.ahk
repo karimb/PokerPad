@@ -266,6 +266,8 @@ SetHotkeys() {
 	IniRead, rtick, PokerPad.ini, Hotkeys, Rtick, 0
 	IniRead, ftick, PokerPad.ini, Hotkeys, Ftick, 1
 	IniRead, pot_ipoker, PokerPad.ini, iPoker, PotButton, Button 3
+	IniRead, pot_pacific, PokerPad.ini, Pacific, PotButton, Button 4
+	IniRead, pot_swcpoker, PokerPad.ini, SwcPoker, PotButton, Button 3
 	if hotkey {
 		Hotkey, Numpad0, NumpadDigit
 		Hotkey, Numpad1, NumpadDigit

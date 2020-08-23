@@ -65,8 +65,8 @@ SwCPoker() {
 	SwCPoker_BetBox = 547 490 20 5
 
 	SwCPoker_GameWindow = / ahk_class Qt5QWindowIcon
-	SwCPoker_LobbyWindow = SwC ahk_class Qt5QWindowIcon
-	SwCPoker_LastHandWindow = : ahk_class Qt5QWindowOwnDC
+	SwCPoker_LobbyWindow = SwC Poker ahk_class Qt5QWindowIcon
+	;SwCPoker_LastHandWindow = : ahk_class Qt5QWindowOwnDC
 	; Same as Party :(
 	SiteQt5QWindowIcon = SwCPoker
 	SetClientHotkeys("SwCPoker")
@@ -94,7 +94,7 @@ SwCPoker_GetPot(factor) {
 }
 	
 SwCPoker_CheckBet(bet) {
-	SwCPoker_AdjustClick(596, 671)
+	SwCPoker_AdjustClick(553, 490)
 	Send, {Home}+{End}^c
 	Sleep, 200
 	if (Clipboard == bet)
@@ -104,7 +104,7 @@ SwCPoker_CheckBet(bet) {
 }
 	
 SwCPoker_Bet(ByRef betbox, bet = "") {
-	SwCPoker_AdjustClick(596, 671)
+	SwCPoker_AdjustClick(553, 490)
 	Bet(bet)
 }
 
@@ -211,7 +211,7 @@ SwCPoker_AdjustClick(x, y, c = 1) {
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
-	WriteLog("AdjustClick to x: " x " y: " y)
+	WriteLog("SwCPoker - AdjustClick to x: " x " y: " y)
 	Sleep, 50
 }
 
@@ -224,7 +224,7 @@ SwCPoker_ClickButton(button, id = "") {
 	GetWindowArea(x, y, w, h, box, false, id)
 	ClickWindowRect(x, y, w, h, id)	
 	;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
-	WriteLog(name " - x: " x ", y:" y ", width: " w ", height:" h)
+	WriteLog("SwCPoker - " name " - x: " x ", y:" y ", width: " w ", height:" h)
 }
 
 
@@ -246,8 +246,8 @@ SwCPoker_NumpadDigit:
 	ForwardNumpadKey(A_ThisHotkey)
 	return
 SwCPoker_Fold:
-	SwCPoker_ClickButton("Fold")
-	;SwCPoker_ClickButton("CheckFold")
+	;SwCPoker_ClickButton("Fold")
+	SwCPoker_ClickButton("CheckFold")
 	return
 SwCPoker_Call:
 	SwCPoker_ClickButton("Call")
@@ -316,7 +316,7 @@ SwCPoker_AllIn:
 	SendEvent, {WheelUp 1000}
 	return
 SwCPoker_LastHand:
-	ClickWindowArea2(SwCPoker_LastHand)
+	;ClickWindowArea2(SwCPoker_LastHand)
 	return
 SwCPoker_IncreaseBet:
 SwCPoker_IncreaseBet2:
