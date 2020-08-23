@@ -34,14 +34,17 @@ Menu, Tray, DeleteAll
 Menu, Tray, NoStandard
 Menu, Tray, Add, &Settings..., Settings
 Menu, Tray, Default, &Settings...
+/*
 if FullTilt_GameWindow
 	Menu, Open, Add, Full Tilt Poker, FullTilt
+*/
 if PokerStars_GameWindow
 	Menu, Open, Add, Poker Stars, PokerStars
 if IPoker_GameWindow
 	Menu, Open, Add, iPoker, IPoker
 if PartyPoker_GameWindow
 	Menu, Open, Add, Party Poker, PartyPoker
+/*
 if EverestPoker_GameWindow
 	Menu, Open, Add, Everest Poker, EverestPoker
 if Ongame_GameWindow
@@ -50,10 +53,13 @@ if CakePoker_GameWindow
 	Menu, Open, Add, Cake Poker, CakePoker
 if Microgaming_GameWindow
 	Menu, Open, Add, Microgaming, Microgaming
+*/
 if Pacific_GameWindow
 	Menu, Open, Add, Pacific, Pacific
 if SkyPoker_GameWindow
 	Menu, Open, Add, Sky Poker, SkyPoker
+if SwCPoker_GameWindow
+	Menu, Open, Add, SwC Poker, SwCPoker
 Menu, Tray, Add, &Open, :Open
 Menu, Tray, Add
 Menu, Tray, Add, &Pause/Unpause, PauseScript
@@ -131,16 +137,19 @@ OpenClient(name) {
 		Run, % path, % dir
 	}
 }
-FullTilt:
+;FullTilt:
 PokerStars:
 IPoker:
 PartyPoker:
+/*
 EverestPoker:
 Ongame:
 CakePoker:
 Microgaming:
+*/
 Pacific:
 SkyPoker:
+SwCPoker:
 	OpenClient(A_ThisLabel)
 	return
 	
@@ -213,9 +222,11 @@ SetHotkey(label, modifier = "", modifierLabel = "") {
 
 SetHotkeys() {
 	local load
+	/*
 	IniRead, load, PokerPad.ini, General, FullTilt, 1
 	if load
 		FullTilt()
+	*/
 	IniRead, load, PokerPad.ini, General, PokerStars, 1
 	if load
 		PokerStars()
@@ -225,6 +236,7 @@ SetHotkeys() {
 	IniRead, load, PokerPad.ini, General, PartyPoker, 1
 	if load
 		PartyPoker()
+	/*
 	IniRead, load, PokerPad.ini, General, EverestPoker, 1
 	if load
 		EverestPoker()
@@ -237,12 +249,16 @@ SetHotkeys() {
 	IniRead, load, PokerPad.ini, General, Microgaming, 1
 	if load
 		Microgaming()
+	*/
 	IniRead, load, PokerPad.ini, General, Pacific, 1
 	if load
 		Pacific()
 	IniRead, load, PokerPad.ini, General, SkyPoker, 1
 	if load
 		SkyPoker()
+	IniRead, load, PokerPad.ini, General, SwCPoker, 1
+	if load
+		SwCPoker()
 		
 	Hotkey, IfWinExist, ahk_group GameWindows
 	local hotkey, names
@@ -501,14 +517,17 @@ AutoPostOffAll:
 	
 AutoPostAll(on) {
 	global
+	/*
 	if FullTilt_GameWindow
 		FullTilt_AutoPostAll(on)
+	*/
 	if PokerStars_GameWindow
 		PokerStars_AutoPostAll(on)
 	if IPoker_GameWindow
 		IPoker_AutoPostAll(on)
 	if PartyPoker_GameWindow
 		PartyPoker_AutoPostAll(on)
+	/*
 	if EverestPoker_GameWindow
 		EverestPoker_AutoPostAll(on)
 	if Ongame_GameWindow
@@ -517,10 +536,13 @@ AutoPostAll(on) {
 		CakePoker_AutoPostAll(on)
 	if Microgaming_GameWindow
 		Microgaming_AutoPostAll(on)
+	*/
 	if Pacific_GameWindow
 		Pacific_AutoPostAll(on)
 	if SkyPoker_GameWindow
 		SkyPoker_AutoPostAll(on)
+	if SwCPoker_GameWindow
+		SwCPoker_AutoPostAll(on)
 }
 
 SitInAll(in) {
@@ -549,17 +571,22 @@ SitInAll(in) {
 	*/
 	if SkyPoker_GameWindow
 		SkyPoker_SitInAll(in)
+	if SwCPoker_GameWindow
+		SwCPoker_SitInAll(in)
 }
 
 LeaveAll:
+	/*
 	if FullTilt_GameWindow
 		FullTilt_CloseGameWindows(FullTilt_GameWindow)
+	*/
 	if PokerStars_GameWindow
 		PokerStars_CloseGameWindows(PokerStars_GameWindow)
 	if IPoker_GameWindow
 		IPoker_CloseGameWindows(IPoker_GameWindow)
 	if PartyPoker_GameWindow
 		PartyPoker_CloseGameWindows(PartyPoker_GameWindow)
+	/*
 	if EverestPoker_GameWindow
 		EverestPoker_CloseGameWindows(EverestPoker_GameWindow)
 	if Ongame_GameWindow
@@ -568,10 +595,13 @@ LeaveAll:
 		CakePoker_CloseGameWindows(CakePoker_GameWindow)
 	if Microgaming_GameWindow
 		Microgaming_CloseGameWindows(Microgaming_GameWindow)
+	*/
 	if Pacific_GameWindow
 		Pacific_CloseGameWindows(Pacific_GameWindow)
 	if SkyPoker_GameWindow
 		Skypoker_CloseGameWindows(SkyPoker_GameWindow)
+	if SwCPoker_GameWindow
+		SwCPoker_CloseGameWindows(SwCPoker_GameWindow)
 	return
 
 Debug() {
@@ -687,15 +717,16 @@ GetFactor(var, ByRef factor) {
 	return false
 }
 
-#Include Includes\FullTilt.ahk
+;#Include Includes\FullTilt.ahk
 #Include Includes\PokerStars.ahk
 #Include Includes\IPoker.ahk
 #Include Includes\PartyPoker.ahk
-#Include Includes\EverestPoker.ahk
-#Include Includes\Ongame.ahk
-#Include Includes\CakePoker.ahk
-#Include Includes\Microgaming.ahk
+;#Include Includes\EverestPoker.ahk
+;#Include Includes\Ongame.ahk
+;#Include Includes\CakePoker.ahk
+;#Include Includes\Microgaming.ahk
 #Include Includes\Pacific.ahk
 #Include Includes\SkyPoker.ahk
+#Include Includes\SwCPoker.ahk
 
 	

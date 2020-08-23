@@ -367,89 +367,22 @@ WriteLog(str) {
 CreateIni() {
 	FileAppend,
 		( LTrim
-		[FullTilt]
-		Path=\Full Tilt Poker\FullTiltPoker.exe
 		[PartyPoker]
 		Path=\PartyGaming\PartyPoker\RunApp.exe
-		[EverestPoker]
-		Path=\Everest Poker\CStart.exe
 		[Ongame]
 		Path=\PokerRoom.com\StartPokerRoom.exe
 		[Pacific]
 		Path=\PacificPoker\bin\888poker.exe
+		PotButton=Button 4
 		Timebank=1
 		[SkyPoker]
 		Path=\SkyPoker\SkyPoker.exe
-		[CakePoker]
-		Path=\Cake Poker\cake.exe
-		Themes=CakePoker
-		Theme=CakePoker
-		Background=0x5F8187
-		ButtonColor=BlueForeground
-		[PokerStars]
-		Path=\PokerStars\PokerStarsUpdate.exe
-		Themes=Classic|HyperSimple
-		Theme=Classic
-		[PokerStarsClassic]
-		Width=792
-		Height=546
-		FoldAny=8,349,90,6
-		SitOut=8,373,90,6
-		AutoPost=8,393,90,6
-		Fold=420,498,100,30
-		Call=547,498,100,30
-		Raise=675,498,100,30
-		StandUp=688,11,90,10
-		Lobby=688,42,90,10
-		LastHand=5,24,110,6
-		Pot=320,16,160,16
-		Options=350,40,100,40
-		Time=510,406,50,40
-		ButtonColor=0x0A3782,8
-		ActionColor=YellowForeground,32
-		ExcludeActionColor=0x326E6E,50
-		PotBackground=0xC1EAF2
-		BoxColor=0xFFFFFF
-		[PokerStarsHyperSimple]
-		Width=792
-		Height=546
-		FoldAny=8,349,90,6
-		SitOut=8,373,90,6
-		AutoPost=8,393,90,6
-		Fold=420,498,100,30
-		Call=547,498,100,30
-		Raise=675,498,100,30
-		StandUp=688,11,90,10
-		Lobby=688,42,90,10
-		LastHand=5,24,110,6
-		Pot=320,16,160,16
-		Options=370,42,60,16
-		Time=510,406,50,40
-		ButtonColor=0xCDC3B2,8
-		ActionColor=DarkForeground,8
-		PotBackground=0xEED7BB
-		BoxColor=0xE7D4CE,8
 		[IPoker]
 		Path=\Titan Poker\casino.exe
 		PotButton=Button 3
-		[Titan]
-		PotColor=0xFFFFFF,16
-		ActionColor=0xFFFFFF,16
-		CheckColor=0x000000
-		BoxColor=0xFB8583,32
-		[CDPoker]
-		PotColor=0xD5EAF9,16
-		ActionColor=0xFCFDFF,16
-		CheckColor=0x2DC2FA
-		BoxColor=0x3AFFE1,32
-		[Microgaming]
-		Path=\PokerTimeMPP\MPPoker.exe
-		Themes=PokerTime
-		Theme=PokerTime
-		[PokerTime]
-		BoxColor=0x404040
-		ActionColor=0xFFFFFF
-		ButtonColor=0x141EBB,16
+		[SwCPoker]
+		Path=\SwC Poker\Loader.exe
+		PotButton=Button 3
 		[Hotkeys]
 		SuspendHotkeys=^Delete
 		LastHand=NumpadAdd

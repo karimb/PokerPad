@@ -79,12 +79,13 @@ Settings() {
 	static fixed, fixed1, fixed2, fixed3, fixed4, fixed5, fixed6, fixed7, fixed8, fixed9, ftick
 	static preflop1, flop1, turn1, river1, street1, preflop2, flop2, turn2, river2, street2, preflop3, flop3, turn3, river3, street3
 	static betRounding, betIncrement, betIncrement2, minRandom, maxRandom, monitors, tables, mouse
-	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific, sky
-	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific, sites_sky
-	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific, path_sky
+	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific, sky, swc
+	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific, sites_sky, sites_swc
+	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific, path_sky, path_swc
 	static theme_stars, theme_cake, theme_micro
 	static preflop_ipoker, postflop_ipoker, pot_ipoker
-	static timebank_pacific
+	static timebank_pacific, pot_pacific
+	static pot_swcpoker
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
 	static muck, max, blinds
@@ -118,6 +119,7 @@ Settings() {
 	sites_sky := TV_Add("Sky Poker", options_sites)
 	;options_reload := TV_Add("Reload", options)
 	;options_autoload := TV_Add("Auto Load", options)
+	sites_swc := TV_Add("SwC Poker", options_sites)
 
 	rules := "a2 v1|w120"
 	ctrlCounts := "18"
@@ -326,7 +328,7 @@ Settings() {
 	Gui, Add, Edit, Hidden vmaxRandom w40, %maxRandom%
 	
 	rules .= ",b5 c2__l20 p5 w130|l5 p5 w130"
-	ctrlCounts .= ",5"
+	ctrlCounts .= ",6"
 	Gui, Add, Text, Hidden, Enable PokerPad for these sites:
 	/*
 	IniRead, load, PokerPad.ini, General, FullTilt, 1
@@ -352,6 +354,8 @@ Settings() {
 	Gui, Add, CheckBox, Hidden Checked%load% vpacific, Pacific Poker
 	IniRead, load, PokerPad.ini, General, SkyPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vsky, Sky Poker
+	IniRead, load, PokerPad.ini, General, SwCPoker, 1
+	Gui, Add, CheckBox, Hidden Checked%load% vswc, SwC Poker
 	
 	rules .= ",a2 v1|w200"
 /*
@@ -436,9 +440,13 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vtheme_micro Choose%r%, % themes
 */
 	rules .= ","
-	ctrlCounts .= ",3"
+	ctrlCounts .= ",5"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
+	Gui, Add, Text, Hidden, Pot Button:
+	IniRead, pot_pacific, PokerPad.ini, Pacific, PotButton, Button 3
+	r := SubStr(pot_pacific, 8, 1) - 1
+	Gui, Add, DropDownList, Hidden vpot_pacific Choose%r%, Button 2|Button 3|Button 4
 	IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
 	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank`n(Restart required)
 	
@@ -446,6 +454,15 @@ Settings() {
 	ctrlCounts .= ",2"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_sky, % GetPath("SkyPoker")
+	
+	rules .= ","
+	ctrlCounts .= ",4"
+	Gui, Add, Text, Hidden, Path:
+	Gui, Add, Edit, Hidden vpath_swc, % GetPath("SwCPoker")
+	Gui, Add, Text, Hidden, Pot Button:
+	IniRead, pot_swcpoker, PokerPad.ini, SwCPoker, PotButton, Button 3
+	r := SubStr(pot_swcpoker, 8, 1)
+	Gui, Add, DropDownList, Hidden vpot_swcpoker Choose%r%, Button 1|Button 2|Button 3|Button 4
 	
 	/*
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
@@ -647,40 +664,31 @@ Settings() {
 		IniWrite, %SuspendHotkeys%, Pokerpad.ini, Hotkeys, SuspendHotkeys
 		IniWrite, %debug%, Pokerpad.ini, Hotkeys, Debug
 		
-		IniWrite, %fulltilt%, Pokerpad.ini, General, FullTilt
-		IniWrite, %stars%, Pokerpad.ini, General, PokerStars
+
 		IniWrite, %ipoker%, Pokerpad.ini, General, iPoker
 		IniWrite, %party%, Pokerpad.ini, General, PartyPoker
-		IniWrite, %everest%, Pokerpad.ini, General, EverestPoker
-		IniWrite, %ongame%, Pokerpad.ini, General, Ongame
-		IniWrite, %cake%, Pokerpad.ini, General, CakePoker
-		IniWrite, %micro%, Pokerpad.ini, General, Microgaming
 		IniWrite, %pacific%, Pokerpad.ini, General, Pacific
+		IniWrite, %sky%, Pokerpad.ini, General, SkyPoker
+		IniWrite, %swc%, Pokerpad.ini, General, SwCPoker
 		
-		IniWrite, %path_fulltilt%, Pokerpad.ini, FullTilt, Path
-		IniWrite, %path_stars%, Pokerpad.ini, PokerStars, Path
+
 		IniWrite, %path_ipoker%, Pokerpad.ini, IPoker, Path
 		IniWrite, %path_party%, Pokerpad.ini, PartyPoker, Path
-		IniWrite, %path_everest%, Pokerpad.ini, EverestPoker, Path
-		IniWrite, %path_ongame%, Pokerpad.ini, Ongame, Path
-		IniWrite, %path_cake%, Pokerpad.ini, CakePoker, Path
-		IniWrite, %path_micro%, Pokerpad.ini, Microgaming, Path
 		IniWrite, %path_pacific%, Pokerpad.ini, Pacific, Path
+		IniWrite, %path_swc%, Pokerpad.ini, SwCPoker, Path
 		
-		IniWrite, %theme_stars%, PokerPad.ini, PokerStars, Theme
-		;IniWrite, %theme_ipoker%, PokerPad.ini, IPoker, Theme
-		IniWrite, %theme_cake%, PokerPad.ini, CakePoker, Theme
-		IniWrite, %theme_micro%, PokerPad.ini, Microgaming, Theme
 		
 		IniWrite, %pot_ipoker%, PokerPad.ini, Ipoker, PotButton
+		IniWrite, %pot_pacific%, PokerPad.ini, Pacific, PotButton
+		IniWrite, %pot_swcpoker%, PokerPad.ini, SwCPoker, PotButton
 		;IniWrite, %preflop_ipoker%, PokerPad.ini, Ipoker, Preflop
 		;IniWrite, %postflop_ipoker%, PokerPad.ini, Ipoker, Postflop
 		
 		IniWrite, %timebank_pacific%, PokerPad.ini, Pacific, Timebank
 
-		SetCurrencyFormat(format_ongame, "Ongame")
+		;SetCurrencyFormat(format_ongame, "Ongame")
 		SetCurrencyFormat(format_party, "PartyPoker")
-		SetCurrencyFormat(format_everest, "EverestPoker")
+		;SetCurrencyFormat(format_everest, "EverestPoker")
 		
 		r := -betRounding + 1
 		IniWrite, %r%, Pokerpad.ini, General, Rounding
@@ -765,6 +773,8 @@ Settings() {
 				selected := 12
 			else if (A_EventInfo == sites_sky)
 				selected := 13
+			else if (A_EventInfo == sites_swc)
+				selected := 14
 			Settings_SetVisibility(ctrls, ctrlCounts, selected, "Show")
 		}
 		return
