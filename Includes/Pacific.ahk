@@ -52,7 +52,7 @@ Pacific() {
 	Pacific_Fold = 360 620 20 10
 	Pacific_CheckFold = 446 620 20 10
 	Pacific_Call = 446 620 20 12
-	Pacific_Raise = 580 620 20 12
+	Pacific_Raise = 578 620 10 12
 	;;Pacific_FoldAny = 635 536 5 5
 
 	;;Pacific_AutoPost = 482 535 5 5
@@ -71,9 +71,9 @@ Pacific() {
 	;Pacific_DecreaseBet = 308 680 2 2
 
 	Pacific_Pot = 470 660 10 2
-	Pacific_PotButton2 = 366 660 10 2
-	Pacific_PotButton3 = 421 660 10 2
-	Pacific_PotButton4 = 470 660 10 2
+	Pacific_PotButton2 = 371 660 10 2
+	Pacific_PotButton3 = 426 660 10 2
+	Pacific_PotButton4 = 466 660 10 2
 	
 	Pacific_BetBox = 596 671 20 5
 
@@ -95,6 +95,7 @@ Pacific_GetPot(factor) {
 	box := Pacific_AdjustSize(Pacific_PotButton%btn%)
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
+	WriteLog("Pacific - Pot Button - x: " x ", y:" y ", width: " w ", height:" h)
 	Sleep, 400
 	;select and copy
 	Pacific_AdjustClick(596, 671)
@@ -187,18 +188,19 @@ Pacific_GetRound(rounding, default) {
 
 ;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
 Pacific_AdjustSize(box, id = "") {
-	local box0, box1, box2, box3, box4, w, h
+	local box0, box1, box2, box3, box4, w, h, off_x
 	if (id != "")
 		WinGetPos, , , w, h, ahk_id %id%
 	else
 		WinGetPos, , , w, h
-	w -= 2 * ResizeBorder	
+	w -= 2 * ResizeBorder
+	off_x := (w - 944.0) / 47.0
 	w /= 944.0
 	h -= (2 * ResizeBorderY + Caption)
 	h /= 708.0
 	StringSplit, box, box, %A_Space%
 	box1 *= w
-	box1 += ResizeBorder
+	box1 += (off_x + ResizeBorder)
 	box2 *= h
 	box2 += (ResizeBorderY + Caption)
 	box3 *= w
@@ -210,14 +212,15 @@ Pacific_AdjustSize(box, id = "") {
 ;AdjustClick clicks to the area of the screen indicated by x and y
 ;with mouse button c (c=0 moves without click) 
 Pacific_AdjustClick(x, y, c = 1) {
-	local px,py,w, h
+	local px,py,w, h, off_x
 	WinGetPos, , , w, h
-	w -= 2 * ResizeBorder	
+	w -= 2 * ResizeBorder
+	off_x := Round((w - 944.0) / 47.0)	
 	w /= 944.0
 	h -= (2 * ResizeBorderY + Caption)
 	h /= 708.0
 	x := Round(x * w)
-	x += ResizeBorder
+	x += ( ResizeBorder)
 	y := Round(y * h)
 	y += (ResizeBorderY + Caption)
 	MouseGetPos, px, py
@@ -247,7 +250,6 @@ Pacific_IsChecked(ByRef checkbox, ByRef x = "", ByRef y = "", ByRef w = "", ByRe
 	Display_DeleteWindowCapture(device, context, pixels, id)
 	return Display_IsRed(bgr)
 }
-
 
 
 
