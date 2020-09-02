@@ -24,16 +24,15 @@ Pacific_FormatAmount(amnt) {
 
 
 Pacific_CheckTimeBank(id, context) {
-	local bgr,box,box0,box1,box2,box3,box4,color,diff
+	local bgr,box,box0,box1,box2,box3,box4,color,diff, adjusted
 	
 	;the color is the orange used by the timebank button in BGR
 	color := 0x20B5FC
 	diff := 20
-	Pacific_TimeBank = 751 563 2 2
-	Pacific_TimeBank := Pacific_AdjustSize(Pacific_TimeBank, id)
-	StringSplit, box, Pacific_TimeBank, %A_Space%
+	adjusted := Pacific_AdjustSize(Pacific_TimeBank, id)
+	StringSplit, box, adjusted, %A_Space%
 	bgr := Display_GetPixel(context, box1, box2)
-	;MsgBox % box1 "-" box2 "-" bgr
+	;WriteLog("CheckTimeBank - box1: " box1 ", box2: " box2)
 	;PixelGetColor, bgr, x, y
 	return Display_CompareColors(bgr, color, diff)
 }
@@ -49,10 +48,10 @@ Pacific_CheckTimeBank(id, context) {
  */
 Pacific() {
 	global
-	Pacific_Fold = 360 620 20 10
+	Pacific_Fold = 355 620 20 10
 	Pacific_CheckFold = 446 620 20 10
 	Pacific_Call = 446 620 20 12
-	Pacific_Raise = 578 620 10 12
+	Pacific_Raise = 573 620 20 12
 	;;Pacific_FoldAny = 635 536 5 5
 
 	;;Pacific_AutoPost = 482 535 5 5
@@ -71,11 +70,11 @@ Pacific() {
 	;Pacific_DecreaseBet = 308 680 2 2
 
 	Pacific_Pot = 470 660 10 2
-	Pacific_PotButton2 = 371 660 10 2
-	Pacific_PotButton3 = 426 660 10 2
-	Pacific_PotButton4 = 466 660 10 2
+	Pacific_PotButton2 = 376 660 5 2
+	Pacific_PotButton3 = 426 660 5 2
+	Pacific_PotButton4 = 466 660 5 2
 	
-	Pacific_BetBox = 596 671 20 5
+	Pacific_BetBox = 596 671 10 5
 
 	Pacific_GameWindow = / ahk_class Qt5QWindowOwnDC
 	Pacific_LobbyWindow = Lobby ahk_class Qt5QWindowIcon
@@ -188,23 +187,29 @@ Pacific_GetRound(rounding, default) {
 
 ;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
 Pacific_AdjustSize(box, id = "") {
-	local box0, box1, box2, box3, box4, w, h, off_x
+	local box0, box1, box2, box3, box4, w, h, r
 	if (id != "")
 		WinGetPos, , , w, h, ahk_id %id%
 	else
 		WinGetPos, , , w, h
+	StringSplit, box, box, %A_Space%
+	r := box1 / 944.0
 	w -= 2 * ResizeBorder
-	off_x := (w - 944.0) / 47.0
 	w /= 944.0
+	if (w > 1) 
+		w *= 1 + (0.5 - r) / 3
+	else
+		w /= 1 + (0.5 - r) / 3
 	h -= (2 * ResizeBorderY + Caption)
 	h /= 708.0
 	StringSplit, box, box, %A_Space%
 	box1 *= w
-	box1 += (off_x + ResizeBorder)
+	box1 += ResizeBorder
 	box2 *= h
 	box2 += (ResizeBorderY + Caption)
 	box3 *= w
 	box4 *= h
+	;WriteLog("AdjustSize to x: " box1 " y: " box2 " r: " r)
 	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
 }
 
@@ -212,21 +217,25 @@ Pacific_AdjustSize(box, id = "") {
 ;AdjustClick clicks to the area of the screen indicated by x and y
 ;with mouse button c (c=0 moves without click) 
 Pacific_AdjustClick(x, y, c = 1) {
-	local px,py,w, h, off_x
+	local px,py,w, h, r
 	WinGetPos, , , w, h
+	r := x / 944.0
 	w -= 2 * ResizeBorder
-	off_x := Round((w - 944.0) / 47.0)	
 	w /= 944.0
+	if (w > 1) 
+		w *= 1 + (0.5 - r) / 3
+	else
+		w /= 1 + (0.5 - r) / 3
 	h -= (2 * ResizeBorderY + Caption)
 	h /= 708.0
 	x := Round(x * w)
-	x += ( ResizeBorder)
+	x += ResizeBorder
 	y := Round(y * h)
 	y += (ResizeBorderY + Caption)
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
-	WriteLog("AdjustClick to x: " x " y: " y)
+	WriteLog("AdjustClick to x: " x " y: " y " r: " r)
 	Sleep, 50
 }
 
@@ -369,8 +378,8 @@ Pacific_AutoTimeBank:
 		id := Wnd%A_Index%
 		Display_CreateWindowCapture(device, context, pixels, id)
 		if (Pacific_CheckTimeBank(id, context)) {
-			ClickWindowArea2(Pacific_TimeBank,0, id)
-			;Pacific_ClickButton("TimeBank", id)
+			;ClickWindowArea2(Pacific_TimeBank,0, id)
+			Pacific_ClickButton("TimeBank", id)
 		}
 		Display_DeleteWindowCapture(device, context, pixels, id)
 		ControlGet,visible,Visible,,,ahk_id %id%
