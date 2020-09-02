@@ -2,7 +2,7 @@
 
 SwCPoker_GetBlind(big) {
 	WinGetTitle, title
-	RegExMatch(title, " \D?(\d+).?/\D?(\d+)", match)
+	RegExMatch(title, " \D?(\d+\.?\d*).?/\D?(\d+\.?\d*)", match)
 	blind := big ? match2 : match1
 	return CurrencyToFloat(blind)
 }
@@ -26,7 +26,7 @@ SwCPoker_CheckTimeBank(id, context) {
 */
 
 /* 
- * All boxes assume a window dimension of 952x735. The Windows theme MUST be Win2000 (also called "Windows Classic" in Personalise)
+ * All boxes assume a window dimension of 824x590. The Windows theme MUST be Win2000 (also called "Windows Classic" in Personalise)
  * so change the the theme in WinXP/Win7 to Win2000 before proceeding
  * all values must be reduced by 4 pixels in x and 23 in y (border width/height in Win2000)
  * (also called "client" coordinate in AHK 1.1)
@@ -35,14 +35,14 @@ SwCPoker_CheckTimeBank(id, context) {
  */
 SwCPoker() {
 	global
-	SwCPoker_Fold = 418 530 20 10
-	SwCPoker_CheckFold = 401 517 2 2
+	SwCPoker_Fold = 418 544 20 2
+	SwCPoker_CheckFold = 418 514 20 2
 	SwCPoker_Call = 560 530 20 12
 	SwCPoker_Raise = 695 530 20 12
 	;;SwCPoker_FoldAny = 635 536 5 5
 
 	;;SwCPoker_AutoPost = 482 535 5 5
-	;SwCPoker_SitOut = 14 512 2 2
+	SwCPoker_SitOut = 16 403 2 2
 
 	;;SwCPoker_AutoMuck = 
 	;SwCPoker_Lobby = 680 27 80 5
@@ -57,10 +57,10 @@ SwCPoker() {
 	;SwCPoker_DecreaseBet = 308 680 2 2
 
 	SwCPoker_Pot = 470 660 10 2
-	SwCPoker_PotButton1 = 546 570 10 5
-	SwCPoker_PotButton2 = 619 570 10 5
-	SwCPoker_PotButton3 = 676 570 10 5
-	SwCPoker_PotButton4 = 746 570 10 5
+	SwCPoker_PotButton1 = 546 455 10 5
+	SwCPoker_PotButton2 = 619 455 10 5
+	SwCPoker_PotButton3 = 676 455 10 5
+	SwCPoker_PotButton4 = 746 455 10 5
 	
 	SwCPoker_BetBox = 547 490 20 5
 
@@ -84,6 +84,7 @@ SwCPoker_GetPot(factor) {
 	box := SwCPoker_AdjustSize(SwCPoker_PotButton%btn%)
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
+	WriteLog("Pacific - Pot Button - x: " x ", y:" y ", width: " w ", height:" h)
 	Sleep, 400
 	;select and copy
 	SwCPoker_AdjustClick(553, 490)
@@ -246,7 +247,8 @@ SwCPoker_NumpadDigit:
 	ForwardNumpadKey(A_ThisHotkey)
 	return
 SwCPoker_Fold:
-	;SwCPoker_ClickButton("Fold")
+	SwCPoker_ClickButton("Fold")
+	Sleep, 100
 	SwCPoker_ClickButton("CheckFold")
 	return
 SwCPoker_Call:
@@ -346,6 +348,7 @@ SwCPoker_Reload:
 SwCPoker_Lobby:
 	ClickWindowArea2(SwCPoker_Lobby)
 	return
+SwCPoker_SitInAll:
 SwCPoker_SitOut:
 	ClickWindowArea2(SwCPoker_SitOut)
 	return
