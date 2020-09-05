@@ -16,7 +16,10 @@ PartyPoker_GetBlind(big) {
 	local blind, title
 	WinGetTitle, title
 	RegExMatch(title, " \D?(\d+\.?\d*)/\D?(\d+\.?\d*)", match)
-	blind := big ? match2 : match1
+	if IsControlVisible(PartyPoker_Edit3)
+		blind := big ? match2 : match1
+	else
+		blind := big ? 1 : 0.5
 	return CurrencyToFloat(blind)
 	;return CurrencyToFloat(SubStr(blind, s, e-s), PartyPoker_Currency, PartyPoker_Separator, PartyPoker_Decimal)
 }
@@ -25,8 +28,7 @@ PartyPoker() {
 	global
 	LoadCurrencyFormat("PartyPoker")
 
-	
-	PartyPoker_LobbyWindow = Poker Lobby ahk_class #32770
+	PartyPoker_LobbyWindow = Lobby ahk_class #32770
 	PartyPoker_TournamentLobbyWindow = Tournament lobby ahk_class #32770
 	PartyPoker_GameWindow = / ahk_class #32770
 	Site#32770 = PartyPoker
@@ -46,7 +48,10 @@ PartyPoker() {
 	PartyPoker_CallRaise2 = AfxWnd42u27
 	
 	PartyPoker_SitOut = Button5
+	; Blinds
 	PartyPoker_BetAmount = Edit2
+	; Dollar
+	PartyPoker_BetAmount2 = Edit3
 	PartyPoker_Chat = Edit1
 	PartyPoker_FoldAny = AfxWnd90u28
 	PartyPoker_AutoMuck = Button2
@@ -61,7 +66,7 @@ PartyPoker() {
 	PartyPoker_ButtonTab = AfxWnd90u5
 	PartyPoker_Min = AfxWnd90u45
 	SetClientHotkeys("PartyPoker")
-	GroupAdd, GameWindows, "- ahk_class #32770"
+	GroupAdd, GameWindows, - ahk_class #32770
 	return true
 }
 
@@ -79,6 +84,7 @@ PartyPoker_BetRelativePot(factor) {
 	
 	if IsControlVisible(PartyPoker_Pot1) {
 		ControlGetText, pot, %PartyPoker_Pot1%
+		MsgBox %pot%
 		;StringGetPos, s, pot, %A_Space%, R
 		RegExMatch(pot, "\D?(\d+\.?\d*)", match)
 		if !ErrorLevel
