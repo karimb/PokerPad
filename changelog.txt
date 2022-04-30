@@ -1,6 +1,9 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
 
+v0.1.42
+888 Update: hopefully now ready for prime time
+
 v0.1.41 
 - 888 (not ready yet - assume pot is 4th button): update to latest version of software.
 - Various little fixes: WheelUp/WheelDown
