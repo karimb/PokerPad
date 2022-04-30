@@ -76,13 +76,13 @@ Pacific() {
 	
 	Pacific_BetBox = 596 671 10 5
 
-	Pacific_GameWindow = / ahk_class Qt5QWindowOwnDC
-	Pacific_LobbyWindow = Lobby ahk_class Qt5QWindowIcon
-	Pacific_LastHandWindow = : ahk_class Qt5QWindowOwnDC
+	Pacific_GameWindow = / ahk_class Qt5152QWindowOwnDC
+	Pacific_LobbyWindow = Lobby ahk_class Qt5152QWindowIcon
+	Pacific_LastHandWindow = : ahk_class Qt5152QWindowOwnDC
 	; Same as Party :(
-	SiteQt5QWindowOwnDC = Pacific
+	SiteQt5152QWindowOwnDC = Pacific
 	SetClientHotkeys("Pacific")
-	GroupAdd, GameWindows, / ahk_class Qt5QWindowOwnDC
+	GroupAdd, GameWindows, / ahk_class Qt5152QWindowOwnDC
 	IniRead, timebank_pacific, PokerPad.ini, Hotkeys, Timebank, 1
 	if (timebank_pacific)
 		SetTimer Pacific_AutoTimeBank, 4000
@@ -373,7 +373,7 @@ Pacific_SitOut:
 	ClickWindowArea2(Pacific_SitOut)
 	return
 Pacific_AutoTimeBank:
-	WinGet Wnd, List, / ahk_class Qt5QWindowOwnDC,,Lobby
+	WinGet Wnd, List, / ahk_class Qt5152QWindowOwnDC,,Lobby
 	Loop, %Wnd% {
 		id := Wnd%A_Index%
 		Display_CreateWindowCapture(device, context, pixels, id)
