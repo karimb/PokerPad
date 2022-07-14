@@ -1,5 +1,7 @@
 PokerPad for Party Poker, iPoker and 888
 ----------------------------------------
+v0.1.43
+888: Support for BB instead of cent and dollar amounts
 
 v0.1.42
 888 Update: hopefully now ready for prime time

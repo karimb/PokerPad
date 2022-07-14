@@ -84,7 +84,7 @@ Settings() {
 	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific, path_sky, path_swc
 	static theme_stars, theme_cake, theme_micro
 	static preflop_ipoker, postflop_ipoker, pot_ipoker
-	static timebank_pacific, pot_pacific
+	static timebank_pacific, pot_pacific, usebb_pacific
 	static pot_swcpoker
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
@@ -440,7 +440,7 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vtheme_micro Choose%r%, % themes
 */
 	rules .= ","
-	ctrlCounts .= ",5"
+	ctrlCounts .= ",6"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	Gui, Add, Text, Hidden, Pot Button:
@@ -449,6 +449,8 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vpot_pacific Choose%r%, Button 2|Button 3|Button 4
 	IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
 	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank`n(Restart required)
+	IniRead, checked, PokerPad.ini, Pacific, UseBB, 0
+	Gui, Add, Checkbox, Hidden y+20 vusebb_pacific Checked%checked%, Amounts in BB
 	
 	rules .= ","
 	ctrlCounts .= ",2"
@@ -685,6 +687,7 @@ Settings() {
 		;IniWrite, %postflop_ipoker%, PokerPad.ini, Ipoker, Postflop
 		
 		IniWrite, %timebank_pacific%, PokerPad.ini, Pacific, Timebank
+		IniWrite, %usebb_pacific%, PokerPad.ini, Pacific, UseBB
 
 		;SetCurrencyFormat(format_ongame, "Ongame")
 		SetCurrencyFormat(format_party, "PartyPoker")

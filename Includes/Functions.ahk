@@ -374,7 +374,8 @@ CreateIni() {
 		[Pacific]
 		Path=\PacificPoker\bin\888poker.exe
 		PotButton=Button 4
-		Timebank=1
+		Timebank=0
+		UseBB=0
 		[SkyPoker]
 		Path=\SkyPoker\SkyPoker.exe
 		[IPoker]

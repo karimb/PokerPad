@@ -2,18 +2,24 @@
 
 Pacific_GetBlind(big) {
 	WinGetTitle, title
-	RegExMatch(title, " \D?(\d+).?/\D?(\d+)", match)
-	if (InStr(title, "¢")) {
-		match1 /= 100.0
-		match2 /= 100.0
+	if (Pacific_UseBB())
+		blind := big ? 1.0 : 0.5
+	else {
+	  RegExMatch(title, " \D?(\d+).?/\D?(\d+)", match)
+	  if (InStr(title, "¢")) {
+		  match1 /= 100.0
+		  match2 /= 100.0
+	  }
+	  blind := big ? match2 : match1
 	}
-	blind := big ? match2 : match1
 	return CurrencyToFloat(blind)
 }
 
 Pacific_FormatAmount(amnt) {
 	local pot
-	if (InStr(amnt, "¢")) 
+	if (Pacific_UseBB())
+	  pot := amnt
+	else if (InStr(amnt, "¢")) 
 		pot := SubStr(amnt, 1, StrLen(amnt) - 1)  / 100.0
 	else if (InStr(amnt, "$"))
 		pot := SubStr(amnt, 2)
@@ -22,6 +28,10 @@ Pacific_FormatAmount(amnt) {
 	return pot
 }
 
+Pacific_UseBB() {
+  IniRead, usebb, PokerPad.ini, Pacific, UseBB, 0
+  return usebb
+}
 
 Pacific_CheckTimeBank(id, context) {
 	local bgr,box,box0,box1,box2,box3,box4,color,diff, adjusted
@@ -64,7 +74,7 @@ Pacific() {
 	;Pacific_Settings
 	Pacific_TimeBank = 751 563 2 2
 	;;Pacific_Chat = 12 538 155 12
-
+	
 	;Just wheel up for now
 	;Pacific_IncreaseBet = 542 680 2 2
 	;Pacific_DecreaseBet = 308 680 2 2
@@ -83,7 +93,7 @@ Pacific() {
 	SiteQt5152QWindowOwnDC = Pacific
 	SetClientHotkeys("Pacific")
 	GroupAdd, GameWindows, / ahk_class Qt5152QWindowOwnDC
-	IniRead, timebank_pacific, PokerPad.ini, Hotkeys, Timebank, 1
+	IniRead, timebank_pacific, PokerPad.ini, Pacific, Timebank, 0
 	if (timebank_pacific)
 		SetTimer Pacific_AutoTimeBank, 4000
 }
