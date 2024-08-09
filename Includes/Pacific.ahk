@@ -54,14 +54,16 @@ Pacific_CheckTimeBank(id, context) {
  * all values must be reduced by 4 pixels in x and 23 in y (border width/height in Win2000)
  * (also called "client" coordinate in AHK 1.1)
  * For example, 600 300 10 5 becomes 596 277 10 5
+ * Edit: for Windows 10, the reduction is 8 pixels in x and 31 in y. 
+ *       The window size must be 956x743 - Times have changed...
  * The functions AdjustClick and AdjustSize then make adjustments for different window sizes and borders
  */
 Pacific() {
 	global
-	Pacific_Fold = 355 620 20 10
-	Pacific_CheckFold = 446 620 20 10
-	Pacific_Call = 446 620 20 12
-	Pacific_Raise = 573 620 20 12
+	Pacific_Fold = 591 670 40 10
+	Pacific_CheckFold = 600 670 40 10
+	Pacific_Call = 715 670 40 12
+	Pacific_Raise = 850 670 40 12
 	;;Pacific_FoldAny = 635 536 5 5
 
 	;;Pacific_AutoPost = 482 535 5 5
@@ -72,30 +74,32 @@ Pacific() {
 	;Pacific_LastHand = 
 	;Pacific_Options =
 	;Pacific_Settings
-	Pacific_TimeBank = 751 563 2 2
+	;Pacific_TimeBank = 751 563 2 2
 	;;Pacific_Chat = 12 538 155 12
 	
 	;Just wheel up for now
 	;Pacific_IncreaseBet = 542 680 2 2
 	;Pacific_DecreaseBet = 308 680 2 2
 
-	Pacific_Pot = 470 660 10 2
-	Pacific_PotButton2 = 376 660 5 2
-	Pacific_PotButton3 = 426 660 5 2
-	Pacific_PotButton4 = 466 660 5 2
+	Pacific_Pot = 820 613 10 2
+	Pacific_PotButton2 = 672 613 5 2
+	Pacific_PotButton3 = 426 613 5 2
+	Pacific_PotButton4 = 820 613 5 2
+	Pacific_PotButton5 = 900 613 5 2
 	
-	Pacific_BetBox = 596 671 10 5
+	Pacific_BetBox = 884 644 10 5
 
 	Pacific_GameWindow = / ahk_class Qt5152QWindowOwnDC
-	Pacific_LobbyWindow = Lobby ahk_class Qt5152QWindowIcon
+	Pacific_LobbyWindow = 888poker ahk_class Qt5152QWindowIcon
 	Pacific_LastHandWindow = : ahk_class Qt5152QWindowOwnDC
 	; Same as Party :(
 	SiteQt5152QWindowOwnDC = Pacific
 	SetClientHotkeys("Pacific")
 	GroupAdd, GameWindows, / ahk_class Qt5152QWindowOwnDC
-	IniRead, timebank_pacific, PokerPad.ini, Pacific, Timebank, 0
-	if (timebank_pacific)
-		SetTimer Pacific_AutoTimeBank, 4000
+	; Timebank is automated - disabled
+	;IniRead, timebank_pacific, PokerPad.ini, Pacific, Timebank, 0
+	; if (timebank_pacific)
+	;	SetTimer Pacific_AutoTimeBank, 4000
 }
 
 Pacific_GetPot(factor) {
@@ -107,16 +111,17 @@ Pacific_GetPot(factor) {
 	WriteLog("Pacific - Pot Button - x: " x ", y:" y ", width: " w ", height:" h)
 	Sleep, 400
 	;select and copy
-	Pacific_AdjustClick(596, 671)
+	Pacific_AdjustClick(884, 644)
 	Send, {Home}+{End}^c
 	Sleep, 200
 	pot := Clipboard
+	WriteLog("Clipboard amount: " pot)
 	pot := Pacific_FormatAmount(pot)
 	return (factor * pot)
 }
 	
 Pacific_CheckBet(bet) {
-	Pacific_AdjustClick(596, 671)
+	Pacific_AdjustClick(884, 644)
 	Send, {Home}+{End}^c
 	Sleep, 200
 	if (Clipboard == bet)
@@ -126,7 +131,7 @@ Pacific_CheckBet(bet) {
 }
 	
 Pacific_Bet(ByRef betbox, bet = "") {
-	Pacific_AdjustClick(596, 671)
+	Pacific_AdjustClick(884, 644)
 	Bet(bet)
 }
 
@@ -196,6 +201,7 @@ Pacific_GetRound(rounding, default) {
 }
 
 ;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
+;buttons decrease in size proportionally but increases by square root
 Pacific_AdjustSize(box, id = "") {
 	local box0, box1, box2, box3, box4, w, h, r
 	if (id != "")
@@ -203,49 +209,54 @@ Pacific_AdjustSize(box, id = "") {
 	else
 		WinGetPos, , , w, h
 	StringSplit, box, box, %A_Space%
-	r := box1 / 944.0
 	w -= 2 * ResizeBorder
-	w /= 944.0
-	if (w > 1) 
-		w *= 1 + (0.5 - r) / 3
+	if (w < 944) 
+		r := w / 944.0
 	else
-		w /= 1 + (0.5 - r) / 3
-	h -= (2 * ResizeBorderY + Caption)
-	h /= 708.0
-	StringSplit, box, box, %A_Space%
-	box1 *= w
+		r := sqrt(w / 944.0)
+	box1 := 944 - box1
+	box1 *= r
+	box1 := w - box1
 	box1 += ResizeBorder
-	box2 *= h
+	box3 *= r
+	h -= (2 * ResizeBorderY + Caption)
+	r := h / 708.0
+	box2 := 708 - box2
+	box2 *= r
+	box2 := h - box2
 	box2 += (ResizeBorderY + Caption)
-	box3 *= w
-	box4 *= h
-	;WriteLog("AdjustSize to x: " box1 " y: " box2 " r: " r)
+	box4 *= r
+	WriteLog("AdjustSize to x: " Round(box1) " y: " Round(box2) " r: " r)
 	return % Round(box1) . " " . Round(box2) . " " . Round(box3) . " " . Round(box4)
 }
 
 
+
 ;AdjustClick clicks to the area of the screen indicated by x and y
-;with mouse button c (c=0 moves without click) 
+;with mouse button c (c=0 moves without click)
+;buttons decrease in size proportionally but increases by square root 
 Pacific_AdjustClick(x, y, c = 1) {
-	local px,py,w, h, r
+	local px, py, w, h, r
 	WinGetPos, , , w, h
-	r := x / 944.0
-	w -= 2 * ResizeBorder
-	w /= 944.0
-	if (w > 1) 
-		w *= 1 + (0.5 - r) / 3
+	w -= 2 * ResizeBorder	
+	if (w < 944) 
+		r := w / 944.0
 	else
-		w /= 1 + (0.5 - r) / 3
-	h -= (2 * ResizeBorderY + Caption)
-	h /= 708.0
-	x := Round(x * w)
+		r := sqrt(w / 944.0)
+	x := 944 - x
+	x := Round(x * r)
+	x := w - x
 	x += ResizeBorder
-	y := Round(y * h)
+	h -= (2 * ResizeBorderY + Caption)
+	r := h / 708.0
+	y := 708 - y
+	y := Round(y * r)
+	y := h - y
 	y += (ResizeBorderY + Caption)
 	MouseGetPos, px, py
 	Click %x% %y% %c%
 	Click %px% %py% 0
-	WriteLog("AdjustClick to x: " x " y: " y " r: " r)
+	WriteLog("Pacific - AdjustClick to x: " x " y: " y)
 	Sleep, 50
 }
 
@@ -253,12 +264,10 @@ Pacific_ClickButton(button, id = "") {
 	local x, y, w, h, box, name
 	name := button
 	button := Pacific_%button%
-;MsgBox % "Before: " . button .  " After: " . Pacific_AdjustSize(button)
 	box := Pacific_AdjustSize(button, id)
 	GetWindowArea(x, y, w, h, box, false, id)
 	ClickWindowRect(x, y, w, h, id)	
-	;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
-	WriteLog(name " - x: " x ", y:" y ", width: " w ", height:" h)
+	WriteLog(name " - x: " x ", y: " y ", id: " id )
 }
 
 
@@ -279,14 +288,14 @@ Pacific_NumpadDigit:
 	ForwardNumpadKey(A_ThisHotkey)
 	return
 Pacific_Fold:
-	Pacific_ClickButton("Fold")
+	Pacific_ClickButton("Fold", id)
 	;Pacific_ClickButton("CheckFold")
 	return
 Pacific_Call:
-	Pacific_ClickButton("Call")
+	Pacific_ClickButton("Call", id)
 	return
 Pacific_Raise:
-	Pacific_ClickButton("Raise")
+	Pacific_ClickButton("Raise", id)
 	return
 Pacific_Relative1:
 	Pacific_BetRelativePot(Relative1)
@@ -383,7 +392,7 @@ Pacific_SitOut:
 	ClickWindowArea2(Pacific_SitOut)
 	return
 Pacific_AutoTimeBank:
-	WinGet Wnd, List, / ahk_class Qt5152QWindowOwnDC,,Lobby
+	/*WinGet Wnd, List, / ahk_class Qt5152QWindowOwnDC,,Lobby
 	Loop, %Wnd% {
 		id := Wnd%A_Index%
 		Display_CreateWindowCapture(device, context, pixels, id)
@@ -396,4 +405,5 @@ Pacific_AutoTimeBank:
 		if visible
 			DllCall("RedrawWindow","UInt",id,"UInt",0,"UInt",0,"UInt", 1|4|64|1024)
 	}
+	*/
 	return

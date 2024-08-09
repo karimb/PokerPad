@@ -440,15 +440,15 @@ Settings() {
 	Gui, Add, DropDownList, Hidden vtheme_micro Choose%r%, % themes
 */
 	rules .= ","
-	ctrlCounts .= ",6"
+	ctrlCounts .= ",5"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	Gui, Add, Text, Hidden, Pot Button:
 	IniRead, pot_pacific, PokerPad.ini, Pacific, PotButton, Button 3
 	r := SubStr(pot_pacific, 8, 1) - 1
-	Gui, Add, DropDownList, Hidden vpot_pacific Choose%r%, Button 2|Button 3|Button 4
-	IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
-	Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank`n(Restart required)
+	Gui, Add, DropDownList, Hidden vpot_pacific Choose%r%, Button 2|Button 3|Button 4|Button 5
+	;IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
+	;Gui, Add, Checkbox, Hidden vtimebank_pacific Checked%checked%, Auto-click Timebank`n(Restart required)
 	IniRead, checked, PokerPad.ini, Pacific, UseBB, 0
 	Gui, Add, Checkbox, Hidden y+20 vusebb_pacific Checked%checked%, Amounts in BB
 	

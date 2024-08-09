@@ -18,7 +18,7 @@
 #Include Includes\Functions.ahk
 Critical, On
 OnMessage(0x5555, "HandleMessage")
-;SendMode Play
+;SendMode Event
 SetControlDelay, -1
 SetKeyDelay, -1
 SetMouseDelay, -1
@@ -387,8 +387,12 @@ InvokeHotkey(action) {
 		s := Site%class%
 
 	local label := s . "_" . action
-	if IsLabel(label)
+	if IsLabel(label) {
 		GoSub, %label%
+		; Strange Win 10 bug means we must send a MButton click if pressed anyway
+		if (%A_ThisHotkey% = MButton)
+			Send, {MButton}
+	}
 }
 Fold:
 Call:
@@ -730,5 +734,3 @@ GetFactor(var, ByRef factor) {
 #Include Includes\Pacific.ahk
 #Include Includes\SkyPoker.ahk
 #Include Includes\SwCPoker.ahk
-
-	
