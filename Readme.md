@@ -1,7 +1,7 @@
 # PokerPad
 
 ## Synopsis
-PokerPad is a hotkey software for Party Poker, iPoker, Sky Poker, 888 and SwC Poker. It allows linking keyboard keys (or mouse/joypad buttons) to specific actions on the Poker client. For example, a user can link F2 to the action "bet 3/4 of the pot".
+PokerPad is a hotkey software for iPoker, Sky Poker, 888 and SwC Poker. It allows linking keyboard keys (or mouse/joypad buttons) to specific actions on the Poker client. For example, a user can link F2 to the action "bet 3/4 of the pot".
 
 The current development is focused on cash games. Your mileage may vary with SNG and Tournaments.
 
@@ -22,7 +22,6 @@ A slightly outdated quick start guide can be read at: https://github.com/karimb/
 Note that, in order to work with iPoker, the chat window of the iPoker client neeeds to be maximised. Also make sure the Widget Bar is NOT activated (Settings > Widgets > Show Widget Bar unticked).  
 
 ## Credit and Support
-PokerPad was originally developed by Xander. The current maintainer is github's karimb.
+PokerPad was originally developed by Xander. There is no official passing of the baton, but the only known regular maintainer is github's karimb.
 
-Issues can be reported through github at: https://github.com/karimb/PokerPad/issues  
-or by emailing Karim at: karim (at) eml (dot) cc
+Issues can be reported through github at: https://github.com/karimb/PokerPad/issues
