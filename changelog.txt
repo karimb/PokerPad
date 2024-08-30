@@ -1,5 +1,12 @@
-PokerPad for Party Poker, iPoker and 888
-----------------------------------------
+PokerPad for SkyPoker, SwC Poker, iPoker and 888
+------------------------------------------------
+v0.1.44
+888: 
+- Support for updated client
+- Timebank removed
+- Windows 10 - Input lock when mashing middle mouse button resolved
+- performance improvement
+
 v0.1.43
 888: Support for BB instead of cent and dollar amounts
 

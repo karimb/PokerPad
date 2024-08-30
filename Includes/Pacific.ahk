@@ -109,21 +109,24 @@ Pacific_GetPot(factor) {
 	GetWindowArea(x, y, w, h, box, false)
 	ClickWindowRect(x, y, w, h)
 	WriteLog("Pacific - Pot Button - x: " x ", y:" y ", width: " w ", height:" h)
-	Sleep, 400
+	Sleep, 100
 	;select and copy
-	Pacific_AdjustClick(884, 644)
-	Send, {Home}+{End}^c
-	Sleep, 200
-	pot := Clipboard
-	WriteLog("Clipboard amount: " pot)
-	pot := Pacific_FormatAmount(pot)
+	pot := 1
+	if (factor != 1) {
+		Pacific_AdjustClick(884, 644)
+		Send, {Home}+{End}^c
+		Sleep, 50
+		pot := Clipboard
+		WriteLog("Clipboard amount: " pot)
+		pot := Pacific_FormatAmount(pot)
+	}
 	return (factor * pot)
 }
 	
 Pacific_CheckBet(bet) {
 	Pacific_AdjustClick(884, 644)
 	Send, {Home}+{End}^c
-	Sleep, 200
+	Sleep, 50
 	if (Clipboard == bet)
 		return 1
 	else
@@ -136,13 +139,20 @@ Pacific_Bet(ByRef betbox, bet = "") {
 }
 
 Pacific_BetRelativePot(factor) {
-	local box, pot, round := Pacific_GetRound(Rounding, Rounding)
-	bet := GetRoundedAmount(Pacific_GetPot(factor), round)
-	Pacific_Bet(Pacific_BetBox, bet)
-	local c:= Pacific_CheckBet(bet)
-	if (rtick && c) {
+	local press, c, box, pot, round := Pacific_GetRound(Rounding, Rounding)
+	pot := Pacific_GetPot(factor)
+	if (pot != 1) {
+		bet := GetRoundedAmount(pot, round)
+		Pacific_Bet(Pacific_BetBox, bet)
+		c:= Pacific_CheckBet(bet)
+	}
+	press := rtick && c
+	if (press) {
 		Pacific_ClickButton("Raise")
 	}
+    ; removing the highlight around bet amount
+	if (!press && pot != 1)
+		Pacific_AdjustClick(884, 644)
 }
 
 Pacific_FixedBet(factor) {
@@ -231,7 +241,6 @@ Pacific_AdjustSize(box, id = "") {
 }
 
 
-
 ;AdjustClick clicks to the area of the screen indicated by x and y
 ;with mouse button c (c=0 moves without click)
 ;buttons decrease in size proportionally but increases by square root 
@@ -257,7 +266,7 @@ Pacific_AdjustClick(x, y, c = 1) {
 	Click %x% %y% %c%
 	Click %px% %py% 0
 	WriteLog("Pacific - AdjustClick to x: " x " y: " y)
-	Sleep, 50
+	Sleep, 20
 }
 
 Pacific_ClickButton(button, id = "") {
@@ -278,7 +287,6 @@ Pacific_IsChecked(ByRef checkbox, ByRef x = "", ByRef y = "", ByRef w = "", ByRe
 	Display_DeleteWindowCapture(device, context, pixels, id)
 	return Display_IsRed(bgr)
 }
-
 
 
 Pacific_Activate:
