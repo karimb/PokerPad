@@ -60,10 +60,10 @@ Pacific_CheckTimeBank(id, context) {
  */
 Pacific() {
 	global
-	Pacific_Fold = 591 670 40 10
-	Pacific_CheckFold = 600 670 40 10
-	Pacific_Call = 715 670 40 12
-	Pacific_Raise = 850 670 40 12
+	Pacific_Fold = 605 670 40 10
+	Pacific_CheckFold = 605 670 40 10
+	Pacific_Call = 730 670 40 10
+	Pacific_Raise = 850 670 40 10
 	;;Pacific_FoldAny = 635 536 5 5
 
 	;;Pacific_AutoPost = 482 535 5 5

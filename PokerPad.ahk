@@ -390,7 +390,7 @@ InvokeHotkey(action) {
 	if IsLabel(label) {
 		GoSub, %label%
 		; Strange Win 10 bug means we must send a MButton click if pressed anyway
-		if (%A_ThisHotkey% = MButton)
+		if (A_ThisHotkey == "MButton")
 			Send, {MButton}
 	}
 }

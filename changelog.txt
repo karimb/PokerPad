@@ -1,6 +1,12 @@
 PokerPad for SkyPoker, SwC Poker, iPoker and 888
 ------------------------------------------------
 
+2024.09.04
+888:
+- Fold button location has been adjusted
+All:
+- Last release broke Call and Raise shortcuts
+
 2024.08.31
 888: 
 - Support for updated client
