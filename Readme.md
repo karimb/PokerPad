@@ -16,7 +16,7 @@ There are two equivalent ways of installing PokerPad:
 2. Or download AutoHotkey 1.1 from https://autohotkey.com/download/  
 Once AutoHotkey is installed, simply run PokerPad.ahk from the source
 
-Once run, PokerPad will immediately lodges itself into your system tray.
+Once run, PokerPad will immediately lodge itself into your system tray.
 
 ## Manual
 A slightly outdated quick start guide can be read at: https://github.com/karimb/PokerPad/wiki/Quick-Start-Guide

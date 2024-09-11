@@ -211,7 +211,6 @@ Pacific_GetRound(rounding, default) {
 }
 
 ;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
-;buttons decrease in size proportionally but increases by square root
 Pacific_AdjustSize(box, id = "") {
 	local box0, box1, box2, box3, box4, w, h, r
 	if (id != "")
@@ -219,11 +218,13 @@ Pacific_AdjustSize(box, id = "") {
 	else
 		WinGetPos, , , w, h
 	StringSplit, box, box, %A_Space%
-	w -= 2 * ResizeBorder
-	if (w < 944) 
+	w -= 2 * ResizeBorder	
+	;too buggy
+	/*if (w < 944) 
 		r := w / 944.0
 	else
-		r := sqrt(w / 944.0)
+		r := sqrt(w / 944.0)*/
+	r := w / 944.0
 	box1 := 944 - box1
 	box1 *= r
 	box1 := w - box1
