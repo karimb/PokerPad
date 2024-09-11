@@ -211,6 +211,7 @@ Pacific_GetRound(rounding, default) {
 }
 
 ;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
+;buttons increase in size proportionally up to resolution limit of x=1366
 Pacific_AdjustSize(box, id = "") {
 	local box0, box1, box2, box3, box4, w, h, r
 	if (id != "")
@@ -219,13 +220,10 @@ Pacific_AdjustSize(box, id = "") {
 		WinGetPos, , , w, h
 	StringSplit, box, box, %A_Space%
 	w -= 2 * ResizeBorder	
-	;too buggy
-	/*if (w < 944) 
+	if (w < 1358)
 		r := w / 944.0
 	else
-		r := sqrt(w / 944.0)
-	*/
-	r := w / 944.0
+		r := 1358.0 / 944.0
 	box1 := 944 - box1
 	box1 *= r
 	box1 := w - box1
@@ -245,15 +243,15 @@ Pacific_AdjustSize(box, id = "") {
 
 ;AdjustClick clicks to the area of the screen indicated by x and y
 ;with mouse button c (c=0 moves without click)
-;buttons decrease in size proportionally but increases by square root 
+;buttons increase in size proportionally up to resolution limit of 1366x768
 Pacific_AdjustClick(x, y, c = 1) {
 	local px, py, w, h, r
 	WinGetPos, , , w, h
 	w -= 2 * ResizeBorder	
-	if (w < 944) 
+	if (w < 1358)
 		r := w / 944.0
 	else
-		r := sqrt(w / 944.0)
+		r := 1358.0 / 944.0
 	x := 944 - x
 	x := Round(x * r)
 	x := w - x
