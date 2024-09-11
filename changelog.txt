@@ -1,6 +1,9 @@
 PokerPad for SkyPoker, SwC Poker, iPoker and 888
 ------------------------------------------------
 
+2024.09.12
+888: serious resizer issue that occurs for large window is fixed
+
 2024.09.04
 888:
 - Fold button location has been adjusted
