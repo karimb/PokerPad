@@ -223,7 +223,8 @@ Pacific_AdjustSize(box, id = "") {
 	/*if (w < 944) 
 		r := w / 944.0
 	else
-		r := sqrt(w / 944.0)*/
+		r := sqrt(w / 944.0)
+	*/
 	r := w / 944.0
 	box1 := 944 - box1
 	box1 *= r
