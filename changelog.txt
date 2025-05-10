@@ -1,6 +1,9 @@
 PokerPad for SkyPoker, SwC Poker, iPoker and 888
 ------------------------------------------------
 
+2025.05.07
+888: Adjusted to new UI
+
 2024.09.12
 888: serious resizer issue that occurs for large window is fixed
 

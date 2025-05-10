@@ -79,13 +79,14 @@ Settings() {
 	static fixed, fixed1, fixed2, fixed3, fixed4, fixed5, fixed6, fixed7, fixed8, fixed9, ftick
 	static preflop1, flop1, turn1, river1, street1, preflop2, flop2, turn2, river2, street2, preflop3, flop3, turn3, river3, street3
 	static betRounding, betIncrement, betIncrement2, minRandom, maxRandom, monitors, tables, mouse
-	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific, sky, swc
-	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific, sites_sky, sites_swc
-	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific, path_sky, path_swc
+	static fulltilt, stars, ipoker, party, everest, ongame, cake, micro, pacific, sky, swc, acr
+	static sites_fulltilt, sites_stars, sites_ipoker, sites_party, sites_everest, sites_ongame, sites_cake, sites_micro, sites_pacific, sites_sky, sites_swc, sites_acr
+	static path_fulltilt, path_stars, path_ipoker, path_party, path_everest, path_ongame, path_cake, path_micro, path_pacific, path_sky, path_swc, path_acr
 	static theme_stars, theme_cake, theme_micro
 	static preflop_ipoker, postflop_ipoker, pot_ipoker
 	static timebank_pacific, pot_pacific, usebb_pacific
 	static pot_swcpoker
+	static usebb_acr, pot_acr
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
 	static muck, max, blinds
@@ -356,6 +357,7 @@ Settings() {
 	Gui, Add, CheckBox, Hidden Checked%load% vsky, Sky Poker
 	IniRead, load, PokerPad.ini, General, SwCPoker, 1
 	Gui, Add, CheckBox, Hidden Checked%load% vswc, SwC Poker
+	IniRead, acr, PokerPad.ini, General, ACR, 0
 	
 	rules .= ",a2 v1|w200"
 /*
@@ -444,7 +446,7 @@ Settings() {
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_pacific, % GetPath("Pacific")
 	Gui, Add, Text, Hidden, Pot Button:
-	IniRead, pot_pacific, PokerPad.ini, Pacific, PotButton, Button 3
+	IniRead, pot_pacific, PokerPad.ini, Pacific, PotButton, Button 4
 	r := SubStr(pot_pacific, 8, 1) - 1
 	Gui, Add, DropDownList, Hidden vpot_pacific Choose%r%, Button 2|Button 3|Button 4|Button 5
 	;IniRead, checked, PokerPad.ini, Pacific, Timebank, 1
@@ -465,6 +467,9 @@ Settings() {
 	IniRead, pot_swcpoker, PokerPad.ini, SwCPoker, PotButton, Button 3
 	r := SubStr(pot_swcpoker, 8, 1)
 	Gui, Add, DropDownList, Hidden vpot_swcpoker Choose%r%, Button 1|Button 2|Button 3|Button 4
+	
+	IniRead, pot_acr, PokerPad.ini, ACR, PotButton, Button 4
+	IniRead, usebb_acr, PokerPad.ini, ACR, UseBB, 0
 	
 	/*
 	rules .= ",c3 t3 b3_1_a2 v1|w40||v1"
@@ -565,7 +570,7 @@ Settings() {
 			return
 		}
 		if InStr(allInThisHand, "+") {
-			MsgBox, Unconditional All In cannot contain that modifier SHIFT as this is used internally to cancel all Unconditional All In's.
+			MsgBox, Unconditional All In cannot contain that modifier SHIFT as this is used internally to cancel all Unconditional All Ins.
 			TV_Modify(betting)
 			Gui, Show
 			return
@@ -672,22 +677,28 @@ Settings() {
 		IniWrite, %pacific%, Pokerpad.ini, General, Pacific
 		IniWrite, %sky%, Pokerpad.ini, General, SkyPoker
 		IniWrite, %swc%, Pokerpad.ini, General, SwCPoker
+		IniWrite, %acr%, Pokerpad.ini, General, ACR
+		;IniWrite, 1, Pokerpad.ini, General, ACR
 		
 
 		IniWrite, %path_ipoker%, Pokerpad.ini, IPoker, Path
 		IniWrite, %path_party%, Pokerpad.ini, PartyPoker, Path
 		IniWrite, %path_pacific%, Pokerpad.ini, Pacific, Path
 		IniWrite, %path_swc%, Pokerpad.ini, SwCPoker, Path
+		IniWrite, %path_acr%, Pokerpad.ini, ACR, Path
 		
 		
 		IniWrite, %pot_ipoker%, PokerPad.ini, Ipoker, PotButton
 		IniWrite, %pot_pacific%, PokerPad.ini, Pacific, PotButton
 		IniWrite, %pot_swcpoker%, PokerPad.ini, SwCPoker, PotButton
+		IniWrite, %pot_acr%, PokerPad.ini, ACR, PotButton
 		;IniWrite, %preflop_ipoker%, PokerPad.ini, Ipoker, Preflop
 		;IniWrite, %postflop_ipoker%, PokerPad.ini, Ipoker, Postflop
 		
 		IniWrite, %timebank_pacific%, PokerPad.ini, Pacific, Timebank
 		IniWrite, %usebb_pacific%, PokerPad.ini, Pacific, UseBB
+		
+		IniWrite, %usebb_acr%, PokerPad.ini, ACR, UseBB
 
 		;SetCurrencyFormat(format_ongame, "Ongame")
 		SetCurrencyFormat(format_party, "PartyPoker")

@@ -60,6 +60,8 @@ if SkyPoker_GameWindow
 	Menu, Open, Add, Sky Poker, SkyPoker
 if SwCPoker_GameWindow
 	Menu, Open, Add, SwC Poker, SwCPoker
+if ACR_GameWindow
+	Menu, Open, Add, ACR, ACR
 Menu, Tray, Add, &Open, :Open
 Menu, Tray, Add
 Menu, Tray, Add, &Pause/Unpause, PauseScript
@@ -150,6 +152,7 @@ Microgaming:
 Pacific:
 SkyPoker:
 SwCPoker:
+ACR:
 	OpenClient(A_ThisLabel)
 	return
 	
@@ -259,6 +262,9 @@ SetHotkeys() {
 	IniRead, load, PokerPad.ini, General, SwCPoker, 1
 	if load
 		SwCPoker()
+	IniRead, load, PokerPad.ini, General, ACR, 1
+	if load
+		ACR()
 		
 	Hotkey, IfWinExist, ahk_group GameWindows
 	local hotkey, names
@@ -268,6 +274,7 @@ SetHotkeys() {
 	IniRead, pot_ipoker, PokerPad.ini, iPoker, PotButton, Button 3
 	IniRead, pot_pacific, PokerPad.ini, Pacific, PotButton, Button 4
 	IniRead, pot_swcpoker, PokerPad.ini, SwcPoker, PotButton, Button 3
+	IniRead, pot_acr, PokerPad.ini, ACR, PotButton, Button 4
 	if hotkey {
 		Hotkey, Numpad0, NumpadDigit
 		Hotkey, Numpad1, NumpadDigit
@@ -549,6 +556,8 @@ AutoPostAll(on) {
 		SkyPoker_AutoPostAll(on)
 	if SwCPoker_GameWindow
 		SwCPoker_AutoPostAll(on)
+	if ACR_GameWindow
+		ACR_AutoPostAll(on)
 }
 
 SitInAll(in) {
@@ -579,6 +588,8 @@ SitInAll(in) {
 		SkyPoker_SitInAll(in)
 	if SwCPoker_GameWindow
 		SwCPoker_SitInAll(in)
+	if ACR_GameWindow
+		ACR_SitInAll(in)		
 }
 
 LeaveAll:
@@ -608,6 +619,8 @@ LeaveAll:
 		Skypoker_CloseGameWindows(SkyPoker_GameWindow)
 	if SwCPoker_GameWindow
 		SwCPoker_CloseGameWindows(SwCPoker_GameWindow)
+	if ACR_GameWindow
+		ACR_CloseGameWindows(ACR_GameWindow)
 	return
 
 Debug() {
@@ -695,7 +708,7 @@ GetPot(ByRef pot, call, raise, blind) {
 	}
 }
 
-Bet(ByRef bet) {
+Bet(bet) {
 	BlockInput, On
 	Send, {Home}+{End}{Backspace}
 	Sleep, 50
@@ -703,6 +716,16 @@ Bet(ByRef bet) {
 		Send, %bet%
 	Sleep, 50
 	BlockInput, Off
+}
+
+Bet2(bet) {
+	SetKeyDelay,,75, Play
+	SendPlay, {Home}+{End}+{End}{Backspace}
+	Sleep, 100
+	if bet
+		SendPlay, %bet%
+	Sleep, 50
+	SetKeyDelay,,-1, Play
 }
 
 LoadCurrencyFormat(client) {
@@ -734,3 +757,4 @@ GetFactor(var, ByRef factor) {
 #Include Includes\Pacific.ahk
 #Include Includes\SkyPoker.ahk
 #Include Includes\SwCPoker.ahk
+#Include Includes\ACR.ahk

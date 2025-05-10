@@ -54,16 +54,23 @@ Pacific_CheckTimeBank(id, context) {
  * all values must be reduced by 4 pixels in x and 23 in y (border width/height in Win2000)
  * (also called "client" coordinate in AHK 1.1)
  * For example, 600 300 10 5 becomes 596 277 10 5
- * Edit: for Windows 10, the reduction is 8 pixels in x and 31 in y. 
- *       The window size must be 956x743 - Times have changed...
+ * Edit: for Windows 10, the reduction is 8 pixels in x and 31 in y (in screenshots, it is 1 and 31)
+ *       The window client size must be 640x480 - Times have changed...
  * The functions AdjustClick and AdjustSize then make adjustments for different window sizes and borders
  */
 Pacific() {
 	global
-	Pacific_Fold = 605 670 40 10
-	Pacific_CheckFold = 605 670 40 10
-	Pacific_Call = 730 670 40 10
-	Pacific_Raise = 850 670 40 10
+	; The standard size for our coordinate
+	Pacific_StdX := 640.0
+	Pacific_StdY := 480.0
+	; size the buttons stop growing
+	Pacific_MaxResX := 952
+	Pacific_MaxResY := 686
+	
+	Pacific_Fold := "410 454 40 10"
+	Pacific_CheckFold := "410 454 40 10"
+	Pacific_Call := "485 454 40 10"
+	Pacific_Raise := "570 454 40 10"
 	;;Pacific_FoldAny = 635 536 5 5
 
 	;;Pacific_AutoPost = 482 535 5 5
@@ -81,21 +88,21 @@ Pacific() {
 	;Pacific_IncreaseBet = 542 680 2 2
 	;Pacific_DecreaseBet = 308 680 2 2
 
-	Pacific_Pot = 820 613 10 2
-	Pacific_PotButton2 = 672 613 5 2
-	Pacific_PotButton3 = 426 613 5 2
-	Pacific_PotButton4 = 820 613 5 2
-	Pacific_PotButton5 = 900 613 5 2
+	Pacific_Pot := "552 415 5 3"
+	Pacific_PotButton2 := "450 415 5 3"
+	Pacific_PotButton3 := "503 415 5 3"
+	Pacific_PotButton4 := "552 415 5 3"
+	Pacific_PotButton5 := "605 415 5 3"
 	
-	Pacific_BetBox = 884 644 10 5
+	Pacific_BetBox := "610 434 10 3"
 
-	Pacific_GameWindow = / ahk_class Qt5152QWindowOwnDC
+	Pacific_GameWindow = / ahk_class Qt650QWindowOwnDC
 	Pacific_LobbyWindow = 888poker ahk_class Qt5152QWindowIcon
-	Pacific_LastHandWindow = : ahk_class Qt5152QWindowOwnDC
+	Pacific_LastHandWindow = : ahk_class Qt650QWindowOwnDC
 	; Same as Party :(
-	SiteQt5152QWindowOwnDC = Pacific
+	SiteQt650QWindowOwnDC = Pacific
 	SetClientHotkeys("Pacific")
-	GroupAdd, GameWindows, / ahk_class Qt5152QWindowOwnDC
+	GroupAdd, GameWindows, / ahk_class Qt650QWindowOwnDC
 	; Timebank is automated - disabled
 	;IniRead, timebank_pacific, PokerPad.ini, Pacific, Timebank, 0
 	; if (timebank_pacific)
@@ -113,7 +120,7 @@ Pacific_GetPot(factor) {
 	;select and copy
 	pot := 1
 	if (factor != 1) {
-		Pacific_AdjustClick(884, 644)
+		Pacific_AdjustClick()
 		Send, {Home}+{End}^c
 		Sleep, 50
 		pot := Clipboard
@@ -124,7 +131,7 @@ Pacific_GetPot(factor) {
 }
 	
 Pacific_CheckBet(bet) {
-	Pacific_AdjustClick(884, 644)
+	Pacific_AdjustClick()
 	Send, {Home}+{End}^c
 	Sleep, 50
 	if (Clipboard == bet)
@@ -134,7 +141,7 @@ Pacific_CheckBet(bet) {
 }
 	
 Pacific_Bet(ByRef betbox, bet = "") {
-	Pacific_AdjustClick(884, 644)
+	Pacific_AdjustClick()
 	Bet(bet)
 }
 
@@ -152,7 +159,7 @@ Pacific_BetRelativePot(factor) {
 	}
     ; removing the highlight around bet amount
 	if (!press && pot != 1)
-		Pacific_AdjustClick(884, 644)
+		Pacific_AdjustClick()
 }
 
 Pacific_FixedBet(factor) {
@@ -220,18 +227,15 @@ Pacific_AdjustSize(box, id = "") {
 		WinGetPos, , , w, h
 	StringSplit, box, box, %A_Space%
 	w -= 2 * ResizeBorder	
-	if (w < 1358)
-		r := w / 944.0
-	else
-		r := 1358.0 / 944.0
-	box1 := 944 - box1
+	r := Min(Pacific_MaxResX, w) / Pacific_StdX
+	box1 := Pacific_StdX - box1
 	box1 *= r
 	box1 := w - box1
 	box1 += ResizeBorder
 	box3 *= r
 	h -= (2 * ResizeBorderY + Caption)
-	r := h / 708.0
-	box2 := 708 - box2
+	r := Min(Pacific_MaxResY, h) / Pacific_StdY
+	box2 := Pacific_StdY - box2
 	box2 *= r
 	box2 := h - box2
 	box2 += (ResizeBorderY + Caption)
@@ -241,29 +245,15 @@ Pacific_AdjustSize(box, id = "") {
 }
 
 
-;AdjustClick clicks to the area of the screen indicated by x and y
+;AdjustClick clicks in the betbox
 ;with mouse button c (c=0 moves without click)
 ;buttons increase in size proportionally up to resolution limit of 1366x768
-Pacific_AdjustClick(x, y, c = 1) {
-	local px, py, w, h, r
-	WinGetPos, , , w, h
-	w -= 2 * ResizeBorder	
-	if (w < 1358)
-		r := w / 944.0
-	else
-		r := 1358.0 / 944.0
-	x := 944 - x
-	x := Round(x * r)
-	x := w - x
-	x += ResizeBorder
-	h -= (2 * ResizeBorderY + Caption)
-	r := h / 708.0
-	y := 708 - y
-	y := Round(y * r)
-	y := h - y
-	y += (ResizeBorderY + Caption)
+Pacific_AdjustClick(c = 1) {
+	local px, py, w, h, r, box
+	box := Pacific_AdjustSize(Pacific_BetBox)
+	StringSplit, box, box, %A_Space%
 	MouseGetPos, px, py
-	Click %x% %y% %c%
+	Click %box1% %box2% %c%
 	Click %px% %py% 0
 	WriteLog("Pacific - AdjustClick to x: " x " y: " y)
 	Sleep, 20
