@@ -49,13 +49,10 @@ Pacific_CheckTimeBank(id, context) {
 
 
 /* 
- * All boxes assume a window dimension of 952x735. The Windows theme MUST be Win2000 (also called "Windows Classic" in Personalise)
- * so change the the theme in WinXP/Win7 to Win2000 before proceeding
- * all values must be reduced by 4 pixels in x and 23 in y (border width/height in Win2000)
- * (also called "client" coordinate in AHK 1.1)
- * For example, 600 300 10 5 becomes 596 277 10 5
- * Edit: for Windows 10, the reduction is 8 pixels in x and 31 in y (in screenshots, it is 1 and 31)
- *       The window client size must be 640x480 - Times have changed...
+ * To get the "client" coordinates, all values must be reduced by 
+ * Win 2000 Theme: 4 pixels in x and 23 in y
+ * Windows 10: 8 pixels in x and 31 in y (in screenshots, it is 1 and 31)
+ * The window client size must be 640x480
  * The functions AdjustClick and AdjustSize then make adjustments for different window sizes and borders
  */
 Pacific() {
@@ -63,9 +60,8 @@ Pacific() {
 	; The standard size for our coordinate
 	Pacific_StdX := 640.0
 	Pacific_StdY := 480.0
-	; size the buttons stop growing
-	Pacific_MaxResX := 952
-	Pacific_MaxResY := 686
+	; So even if the window is too wide, the buttons stop growing beyond the Aspect Ratio
+	Pacific_AspectRatio := Pacific_StdX / Pacific_StdY
 	
 	Pacific_Fold := "410 454 40 10"
 	Pacific_CheckFold := "410 454 40 10"
@@ -217,8 +213,6 @@ Pacific_GetRound(rounding, default) {
 	return default
 }
 
-;952x735 is the dimensions of the visible area of the default 944x708 window in Windows 2000
-;buttons increase in size proportionally up to resolution limit of x=1366
 Pacific_AdjustSize(box, id = "") {
 	local box0, box1, box2, box3, box4, w, h, r
 	if (id != "")
@@ -226,15 +220,18 @@ Pacific_AdjustSize(box, id = "") {
 	else
 		WinGetPos, , , w, h
 	StringSplit, box, box, %A_Space%
-	w -= 2 * ResizeBorder	
-	r := Min(Pacific_MaxResX, w) / Pacific_StdX
+	
+	w -= 2 * ResizeBorder
+	h -= (2 * ResizeBorderY + Caption)
+	
+	r := (h * Pacific_AspectRatio) / Pacific_StdX
 	box1 := Pacific_StdX - box1
 	box1 *= r
 	box1 := w - box1
 	box1 += ResizeBorder
 	box3 *= r
-	h -= (2 * ResizeBorderY + Caption)
-	r := Min(Pacific_MaxResY, h) / Pacific_StdY
+	
+	r := h / Pacific_StdY
 	box2 := Pacific_StdY - box2
 	box2 *= r
 	box2 := h - box2
@@ -245,9 +242,6 @@ Pacific_AdjustSize(box, id = "") {
 }
 
 
-;AdjustClick clicks in the betbox
-;with mouse button c (c=0 moves without click)
-;buttons increase in size proportionally up to resolution limit of 1366x768
 Pacific_AdjustClick(c = 1) {
 	local px, py, w, h, r, box
 	box := Pacific_AdjustSize(Pacific_BetBox)
