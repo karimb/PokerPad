@@ -384,6 +384,7 @@ CreateIni() {
 		[SwCPoker]
 		Path=\SwC Poker\Loader.exe
 		PotButton=Button 3
+		UseBB=0
 		[Hotkeys]
 		SuspendHotkeys=^Delete
 		LastHand=NumpadAdd

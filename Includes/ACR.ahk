@@ -312,31 +312,36 @@ ACR_Raise:
 	ACR_ClickButton("Raise", id)
 	return
 ACR_Relative1:
-	ACR_BetRelativePot(Relative1)
+	;ACR_BetRelativePot(Relative1)
+	Send, {F6}
 	return
 ACR_Relative2:
-	ACR_BetRelativePot(Relative2)
+	;ACR_BetRelativePot(Relative2)
+	Send, {F1}
 	return
 ACR_Relative3:
-	ACR_BetRelativePot(Relative3)
+	;ACR_BetRelativePot(Relative3)
+	Send, {F2}
 	return
 ACR_Relative4:
-	ACR_BetRelativePot(Relative4)
+	;ACR_BetRelativePot(Relative4)
+	Send, {F3}
 	return
 ACR_Relative5:
-	ACR_BetRelativePot(Relative5)
+	;ACR_BetRelativePot(Relative5)
+	Send, {F4}
 	return
 ACR_Relative6:
-	ACR_BetRelativePot(Relative6)
+	;ACR_BetRelativePot(Relative6)
 	return
 ACR_Relative7:
-	ACR_BetRelativePot(Relative7)
+	;ACR_BetRelativePot(Relative7)
 	return
 ACR_Relative8:
-	ACR_BetRelativePot(Relative8)
+	;ACR_BetRelativePot(Relative8)
 	return
 ACR_Relative9:
-	ACR_BetRelativePot(Relative9)
+	;ACR_BetRelativePot(Relative9)
 	return
 ACR_RandomBet:
 	ACR_BetRelativePot(GetRandomBet())

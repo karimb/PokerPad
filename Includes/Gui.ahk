@@ -85,7 +85,7 @@ Settings() {
 	static theme_stars, theme_cake, theme_micro
 	static preflop_ipoker, postflop_ipoker, pot_ipoker
 	static timebank_pacific, pot_pacific, usebb_pacific
-	static pot_swcpoker
+	static pot_swcpoker, usebb_swcpoker
 	static usebb_acr, pot_acr
 	static format_ongame, format_party, format_everest
 	static autoLoad, available, autoLoadInitial, availableInitial
@@ -359,6 +359,7 @@ Settings() {
 	Gui, Add, CheckBox, Hidden Checked%load% vswc, SwC Poker
 	IniRead, acr, PokerPad.ini, General, ACR, 0
 	
+	
 	rules .= ",a2 v1|w200"
 /*
 	ctrlCounts .= ",2"
@@ -460,13 +461,15 @@ Settings() {
 	Gui, Add, Edit, Hidden vpath_sky, % GetPath("SkyPoker")
 	
 	rules .= ","
-	ctrlCounts .= ",4"
+	ctrlCounts .= ",5"
 	Gui, Add, Text, Hidden, Path:
 	Gui, Add, Edit, Hidden vpath_swc, % GetPath("SwCPoker")
 	Gui, Add, Text, Hidden, Pot Button:
 	IniRead, pot_swcpoker, PokerPad.ini, SwCPoker, PotButton, Button 3
 	r := SubStr(pot_swcpoker, 8, 1)
 	Gui, Add, DropDownList, Hidden vpot_swcpoker Choose%r%, Button 1|Button 2|Button 3|Button 4
+	IniRead, checked, PokerPad.ini, SwCPoker, UseBB, 0
+	Gui, Add, Checkbox, Hidden y+20 vusebb_swcpoker Checked%checked%, Amounts in BB
 	
 	IniRead, pot_acr, PokerPad.ini, ACR, PotButton, Button 4
 	IniRead, usebb_acr, PokerPad.ini, ACR, UseBB, 0
@@ -697,6 +700,8 @@ Settings() {
 		
 		IniWrite, %timebank_pacific%, PokerPad.ini, Pacific, Timebank
 		IniWrite, %usebb_pacific%, PokerPad.ini, Pacific, UseBB
+		
+		IniWrite, %usebb_swcpoker%, PokerPad.ini, SwCPoker, UseBB
 		
 		IniWrite, %usebb_acr%, PokerPad.ini, ACR, UseBB
 

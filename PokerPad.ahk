@@ -18,7 +18,7 @@
 #Include Includes\Functions.ahk
 Critical, On
 OnMessage(0x5555, "HandleMessage")
-;SendMode Event
+;SendMode Play
 SetControlDelay, -1
 SetKeyDelay, -1
 SetMouseDelay, -1

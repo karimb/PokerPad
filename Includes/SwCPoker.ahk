@@ -3,8 +3,16 @@
 SwCPoker_GetBlind(big) {
 	WinGetTitle, title
 	RegExMatch(title, " \D?(\d+\.?\d*).?/\D?(\d+\.?\d*)", match)
-	blind := big ? match2 : match1
+	if (SwCPoker_UseBB()) 
+		blind := big? 1 : 0.5
+	else
+		blind := big ? match2 : match1
 	return CurrencyToFloat(blind)
+}
+
+SwCPoker_UseBB() {
+  IniRead, usebb, PokerPad.ini, SwCPoker, UseBB, 0
+  return usebb
 }
 
 
@@ -83,7 +91,7 @@ SwCPoker_GetPot(factor) {
 	btn := SubStr(pot_swcpoker, 8, 1)
 	box := SwCPoker_AdjustSize(SwCPoker_PotButton%btn%)
 	GetWindowArea(x, y, w, h, box, false)
-	ClickWindowRect(x, y, w, h)
+	ClickWindowRect2(x, y, w, h)
 	WriteLog("Pacific - Pot Button - x: " x ", y:" y ", width: " w ", height:" h)
 	Sleep, 400
 	;select and copy
@@ -223,8 +231,10 @@ SwCPoker_ClickButton(button, id = "") {
 ;MsgBox % "Before: " . button .  " After: " . SwCPoker_AdjustSize(button)
 	box := SwCPoker_AdjustSize(button, id)
 	GetWindowArea(x, y, w, h, box, false, id)
-	ClickWindowRect(x, y, w, h, id)	
+	; ControlClick of ClickWIndowRect is now ignored - We will simulate the real click with ClickWIndowRect2 
+	;ClickWindowRect(x, y, w, h, id)	
 	;MsgBox, x: %x%, y: %y%, width: %w%, height: %h%
+	ClickWindowRect2(x, y, w, h)
 	WriteLog("SwCPoker - " name " - x: " x ", y:" y ", width: " w ", height:" h)
 }
 
@@ -248,8 +258,8 @@ SwCPoker_NumpadDigit:
 	return
 SwCPoker_Fold:
 	SwCPoker_ClickButton("Fold")
-	Sleep, 100
-	SwCPoker_ClickButton("CheckFold")
+	; Sleep, 100
+	; SwCPoker_ClickButton("CheckFold")
 	return
 SwCPoker_Call:
 	SwCPoker_ClickButton("Call")
