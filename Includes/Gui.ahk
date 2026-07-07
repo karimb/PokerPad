@@ -383,7 +383,7 @@ Settings() {
 	Gui, Add, Text, Hidden, Pot Button:
 	IniRead, pot_ipoker, PokerPad.ini, IPoker, PotButton, Button 3
 	r := SubStr(pot_ipoker, 8, 1)
-	Gui, Add, DropDownList, Hidden vpot_ipoker Choose%r%, Button 1|Button 2|Button 3
+	Gui, Add, DropDownList, Hidden vpot_ipoker Choose%r%, Button 1|Button 2|Button 3|Button 4
 	;Gui, Add, Text, Hidden, Pot Button Preflop:
 	;IniRead, preflop_ipoker, PokerPad.ini, IPoker, Preflop, Button 3
 	;r := SubStr(preflop_ipoker, 8, 1)

@@ -10,7 +10,7 @@ SysGet, Caption, 4
 SysGet, Border, 45
 SysGet, ResizeBorder, 32
 SysGet, ResizeBorderY, 33
-debug := 0
+debug := 1
  
  
  
@@ -515,4 +515,30 @@ ReadColor(theme, client, key) {
 		%client%_%key%Variation := 0
 	}
 	return true
+}
+
+WaitClipboard() {
+  local s := 0
+  while (s < 600 and Clipboard = "") {
+    s += 20
+	Sleep, 20
+  }
+}
+
+GetCapturedText(ByRef x, ByRef y, ByRef w, ByRef h, ByRef id = "") {
+	local xw, yh
+	MouseGetPos, mouseX, mouseY
+	xw := x + w
+	yh := y + h
+	BlockInput, On
+	Click, %x% %y% 0
+	Clipboard := ""
+	Sleep, 20
+	Send, #+q
+	Sleep, 100
+	Click, %xw% %yh% 1
+	Sleep 100
+	BlockInput, Off
+	Click, %mouseX% %mouseY% 0
+	WaitClipboard()
 }

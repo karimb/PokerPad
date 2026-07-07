@@ -5,7 +5,7 @@ ACR_GetBlind(big) {
 	if (ACR_UseBB())
 		blind := big ? 1.0 : 0.5
 	else {
-	  RegExMatch(title, " \D?(\d+).?/\D?(\d+)", match)
+	  RegExMatch(title, "€(\d+.?\d*)/€(\d+.?\d*)", match)
 	  if (InStr(title, "¢")) {
 		  match1 /= 100.0
 		  match2 /= 100.0

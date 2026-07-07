@@ -93,7 +93,7 @@ Pacific() {
 	Pacific_BetBox := "610 434 10 3"
 
 	Pacific_GameWindow = / ahk_class Qt650QWindowOwnDC
-	Pacific_LobbyWindow = 888poker ahk_class Qt5152QWindowIcon
+	Pacific_LobbyWindow = 888poker ahk_class Qt650QWindowOwnDCIcon
 	Pacific_LastHandWindow = : ahk_class Qt650QWindowOwnDC
 	; Same as Party :(
 	SiteQt650QWindowOwnDC = Pacific
@@ -116,9 +116,11 @@ Pacific_GetPot(factor) {
 	;select and copy
 	pot := 1
 	if (factor != 1) {
+		Clipboard := ""
+		Sleep, 20
 		Pacific_AdjustClick()
 		Send, {Home}+{End}^c
-		Sleep, 50
+		WaitClipboard()
 		pot := Clipboard
 		WriteLog("Clipboard amount: " pot)
 		pot := Pacific_FormatAmount(pot)
@@ -127,9 +129,11 @@ Pacific_GetPot(factor) {
 }
 	
 Pacific_CheckBet(bet) {
+	Clipboard := ""
+	Sleep, 20
 	Pacific_AdjustClick()
 	Send, {Home}+{End}^c
-	Sleep, 50
+	WaitClipboard()
 	if (Clipboard == bet)
 		return 1
 	else
